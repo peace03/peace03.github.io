@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>윤평화 — Game Client Programmer</title>
-<meta name="description" content="게임 클라이언트 프로그래머 윤평화의 포트폴리오. Unity 3인칭 액션 '현무(玄武)'의 전투 시스템, 적 AI, 캐릭터 파이프라인.">
+<meta name="description" content="게임 클라이언트 프로그래머 윤평화의 포트폴리오. Unity 3인칭 액션 '철과 묵'의 전투 시스템, 적 AI, 캐릭터 파이프라인.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Serif+KR:wght@900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -120,6 +120,11 @@ nav a.m:hover{color:var(--red)}
 .media .tagv{position:absolute;left:10px;top:10px;z-index:2;background:rgba(10,10,11,.7);padding:3px 8px}
 .media img,.media video.plain{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#12161f}
 
+.ovmedia{margin-top:44px}
+.ovmedia>.m{margin-bottom:12px}
+.media iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+.casev{margin-top:22px;max-width:760px}
+
 /* Stages */
 .slist{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
 .slist button{background:none;border:1px solid #2A2A2E;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:baseline;font-size:14.5px;color:#c2c2c9;transition:.2s}
@@ -224,7 +229,7 @@ ol.log li::before{content:"";position:absolute;left:-4px;top:8px;width:7px;heigh
     <p class="fade">플레이어가 반응할 수 있는 전투를 만듭니다. 타이밍을 눈대중으로 맞추지 않고, 구조로 보장하는 Unity 클라이언트 개발자입니다.</p>
     <div class="cta fade"><a class="btn p" href="#projects">SELECT PROJECT ▶</a><a class="btn" href="https://github.com/peace03" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://sedatus.tistory.com" target="_blank" rel="noopener">Blog</a></div>
   </div>
-  <div class="corner m fade">Now playing<br><span style="color:#fff">玄武 — Boss Arena</span><br>Scroll ↓</div>
+  <div class="corner m fade">Now playing<br><span style="color:#fff">철과 묵 — Boss Arena</span><br>Scroll ↓</div>
 </section>
 
 <section id="about">
@@ -284,14 +289,15 @@ const $=s=>document.querySelector(s), RM=matchMedia('(prefers-reduced-motion:red
    프로젝트를 추가하려면 이 배열에 묶음 하나를 넣으면 됩니다. 카드와 탭이 자동으로 생깁니다.
    stages / ai / log 는 없으면 그 탭이 숨겨집니다. */
 const P=[
-{id:'hyunmu',title:'현무 <i>玄武</i>',name:'현무',period:'2026.10.01 — 11.03',one:'조선 스팀펑크 3인칭 액션 · Unity 6',img:'assets/s_hero.jpg',
+{id:'cheolmuk',title:'철과 묵',name:'철과 묵',period:'2026.10.01 — 11.03',one:'조선 스팀펑크 3인칭 액션 · 팀 4인',img:'assets/cm_title.jpg',pos:'72% center',
  ov:{
   lead:'1887년 정월, 시간이 얼어붙은 한양. <b>증기통을 멘 무사</b>가 깨어난 수신(水神) 현무를 다시 잠재우러 가는 <b>조선 스팀펑크 3인칭 액션</b>입니다.',
-  body:['5명이 5주 동안 만든 Unity 팀 프로젝트로, 약 5분 분량의 시연 빌드(필드 전투 → 보스전)를 완성했습니다.','저는 <b>전투 시스템과 적 AI 프로그래밍</b>을 맡았고, 캐릭터·소품 3D 파이프라인과 팀 문서 워크플로우(서기)를 함께 담당했습니다.'],
+  body:['4명이 5주 동안 만든 Unity 팀 프로젝트로, 약 5분 분량의 시연 빌드(필드 전투 → 보스전)를 완성했습니다.','저는 <b>전투 시스템과 적 AI 프로그래밍</b>을 맡았고, 캐릭터·소품 3D 파이프라인과 팀 문서 워크플로우(서기)를 함께 담당했습니다.'],
   roles:['Combat System','Enemy AI','Aim / VFX','Rigging · Cloth','Team Workflow'],
   credit:'영상 속 보스 현무, HUD·월드, 환도 검술 모션은 팀원(BHS · NMJ · NGH)의 작업입니다. Stages 탭에는 제가 맡은 부분만 정리했습니다.',
   links:[['https://github.com/Shaun1667/Project-SteamAttack','PROJECT REPOSITORY ↗']],
-  stats:[[150,' / 314','My commits / team total'],[67,'','C# scripts (namespace YPH)'],[12705,'','Lines of C#'],[105,'','Team decisions logged (D-001~)'],['5',' 人','Team size'],['Unity 6','','Engine · PC · 60fps target']]},
+  drive:'18wpYeqptIZVkj41oUxUYQgeTe6eTg_gG',driveCap:'Full playthrough · 5분 9초',
+  stats:[[150,' / 314','My commits / team total'],[67,'','C# scripts (namespace YPH)'],[12705,'','Lines of C#'],[105,'','Team decisions logged (D-001~)'],['4',' 人','Team size'],['Unity 6','','Engine · PC · 60fps target']]},
  stages:[
   {t:'화승총 · 조준 연출',img:'assets/s_aim.jpg',v:'assets/boss.mp4#t=10.5',cap:'Boss Arena',
    d:'탄약 대신 증기를 쓰는 화승총과, 조준하는 순간 화면에 먹이 번지는 연출을 만들었습니다.',
@@ -413,65 +419,67 @@ EventBus<HitStopEvent>.Publish(new HitStopEvent(HitStopFrame));`},
    ['해결','커브 끝단에 0으로 복귀하는 키를 추가했습니다. 시간의 소유권을 애니메이션으로 옮겼으니 초기화도 애니메이션에서 하는 것이 일관된 해법입니다. 코드에 방어 로직을 얹으면 진리의 원천이 다시 둘로 쪼개집니다.']]}],
   retro:['애니메이션 이벤트 의존을 줄이겠습니다. 에셋 교체로 이벤트가 유실되면 컴파일도 테스트도 잡아주지 못합니다. 클립별 필수 이벤트를 검사하는 에디터 검증 툴을 먼저 만들 것입니다.','수치를 처음부터 재겠습니다. 손맛 개선을 "괜찮아 보인다"로 판단한 구간이 있었습니다. 다음엔 Profiler로 숫자를 남기겠습니다.']}},
 
-{id:'smartcity',title:'SmartCity VR',name:'SmartCity VR',period:'2026.04 — 05',one:'VR 지하철역 멀티플레이 · Meta Quest',mark:'VR',
+{id:'smartcity',title:'SmartCity VR',name:'SmartCity VR',period:'2026.04 — 05',one:'VR 지하철역 멀티플레이 · Meta Quest',img:'assets/vr_card.jpg',
  ov:{
   lead:'<b>VR 지하철역 멀티플레이 시뮬레이션</b>. 개발 2인 팀에서 <b>월드가 살아 움직이게 만드는 쪽</b>을 맡았습니다.',
   body:['지하철 운행 루프, 혼잡도 시각화, Photon 멀티플레이 동기화 전반, VR 기기와 3D 아바타의 IK 연동, NPC 군중 AI를 설계·구현했습니다.','여러 대의 기기가 같은 세계를 봐야 하는 상황에서, <b>상태 · 사건 · 스트림</b>을 구분해 동기화 수단을 갈라 쓴 경험입니다.'],
   roles:['Photon PUN2','XR Interaction Toolkit','Animation Rigging IK','Behaviour Tree','NavMesh','Network Pooling'],
   credit:'상호작용 UI와 홈·플랫폼 씬은 다른 개발 팀원이, 3D 에셋은 그래픽 2인이 담당했습니다.',
   links:[['https://github.com/peace03/Sasinamu_VR','REPOSITORY ↗']],
-  stats:[[33,' / 58','My commits / team total'],[35,' / 62','My scripts / team total'],[4,' 주','Dev period'],['4',' 人','Team (dev 2 · art 2)']]},
+  stats:[[33,' / 58','My commits / team total'],[35,' / 62','My scripts / team total'],[4,' 주','Dev period'],['4',' 人','Team (dev 2 · art 2)']],
+  video:'assets/vr_intro.mp4',poster:'assets/vr_intro.jpg',cap:'Station overview'},
  stages:[
-  {t:'지하철 운행 루프',
+  {t:'지하철 운행 루프',img:'assets/vr_subway1.jpg',v:'assets/vr_subway1.mp4',raw:1,cap:'Subway cycle',
    d:'"언제"와 "어떻게"를 분리했습니다. 스케줄러가 사이클에 상태를 밀어 넣는 한 방향이라 배차 간격을 바꿔도 이동 로직은 손대지 않습니다.',
    li:['<code>SubwayCycle</code> — 5단계 상태 기계 (StandBy → Start → Arrive → CloseDoor → Leave)','<code>SubwayScheduler</code> — 배차 타이머 (간격 30초, 정차 10초)','월드를 굴리는 주체는 방장 하나 — 두 스크립트 모두 <code>IsMasterClient</code> 가드로 시작','도착 연출은 등속이 아니라 감속 — 가속한 속도를 Lerp의 t로 써서 목표에 가까울수록 느려지게','혼잡도 값 하나가 바닥 발광 · 조명 · 안내 텍스트 · 파티클에 동시에 반영'],
    g:['State Machine','Photon','VFX Graph']},
-  {t:'네트워크 — 상황마다 다른 동기화 수단',
+  {t:'네트워크 — 상황마다 다른 동기화 수단',img:'assets/vr_doorA.jpg',v:'assets/vr_doorA.mp4',raw:1,cap:'Door sync · client A',
    d:'"동기화"는 하나의 기능이 아니었습니다. 매 프레임 흘려보낼 것, 한 번만 알릴 것, 나중에 들어온 사람도 알아야 할 것을 갈라 썼습니다.',
    li:['<b>Room CustomProperties</b> — 문 개폐·탑승 가능·승객 수 같은 <b>지속되는 상태</b>. 중간에 들어온 사람이 읽어서 맞춤','<b>IPunObservable</b> — HMD 머리와 양손 같은 <b>연속 스트림</b>. 한 패킷을 놓쳐도 다음 패킷이 덮음','<b>RPC</b> — 효과음 같은 <b>일회성 사건</b>','<b>PhotonTransformView</b> — 정형화된 트랜스폼. NPC 10개체는 Discrete로 낮춰 대역폭 절약','방장이 바뀌는 경우까지 처리 — 꺼져 있던 NavMeshAgent를 조건에 따라 다시 켬'],
    g:['Photon PUN2','CustomProperties','RPC']},
-  {t:'네트워크 오브젝트 풀링',
+  {t:'네트워크 오브젝트 풀링',img:'assets/vr_pool.png',cap:'IPunPrefabPool source',
    d:'NPC 10명이 열차 주기마다 생겼다 사라지면 GC가 튑니다. 그런데 Photon이 만드는 객체는 네트워크 ID를 PUN이 발급해서 일반 풀로 재사용할 수 없습니다.',
    li:['Photon의 <code>IPunPrefabPool</code>과 Unity의 <code>IObjectPool</code>을 합성해 <code>PhotonNetwork.PrefabPool</code>에 등록','플레이어 프리팹은 풀을 타지 않도록 이름으로 걸러냄','PUN이 직접 활성화하므로 풀은 반드시 꺼진 상태로 반환','회수는 <code>PhotonNetwork.Destroy</code>로 보내 모든 클라이언트의 풀이 같은 박자로 인스턴스를 되찾게 함'],
    g:['Object Pooling','Photon','GC']},
-  {t:'VR 아바타 — 3점 추적 IK',
+  {t:'VR 아바타 — 3점 추적 IK',img:'assets/vr_rig.jpg',v:'assets/vr_rig.mp4',raw:1,cap:'Avatar IK',
    d:'VR이 주는 정보는 머리와 양손, 세 점뿐입니다. 손의 절대 좌표에서 팔꿈치와 어깨를 역산해야 합니다.',
    li:['Animation Rigging의 <code>TwoBoneIKConstraint</code> 2개로 양팔, <code>MultiRotationConstraint</code>로 머리','원격 아바타용 IK를 따로 짜지 않음 — 세 트랜스폼만 네트워크 값으로 보간하면 IK 구속이 로컬과 똑같이 동작. 보내는 데이터는 값 5개','입력 충돌 해결: 프리팹의 카메라·컨트롤러를 꺼진 채 배포하고 <code>photonView.IsMine</code>인 쪽만 켬. "남의 것을 끄는" 방식은 실행 순서에 따라 실패하지만 "내 것만 켜는" 방식은 안전'],
    g:['Animation Rigging','IK','XR']},
-  {t:'NPC 군중 AI',
+  {t:'NPC 군중 AI',img:'assets/vr_npcbt.png',cap:'Behaviour Tree source',
    d:'움직이는 열차에 타는 군중을 직접 만든 Behaviour Tree와 NavMesh로 구현했습니다.',
    li:['BT 노드 4개, 총 80줄. 리프가 <code>Func</code>를 감싸는 형태라 행동마다 클래스를 만들지 않음','NavMesh는 움직이는 바닥을 따라가지 못함 → 탑승 시점에 NavMeshAgent를 끄고 CharacterController로 전환, 열차의 자식으로 붙여 로컬 좌표에서 자리 탐색','줄서기 알람 큐 — 각 NPC가 임의의 시각에 울릴 알람을 등록해 10명이 한 덩어리로 움직이지 않게 함','길찾기와 행동 판단은 방장만 수행하고 나머지는 좌표만 받음'],
    g:['Behaviour Tree','NavMesh','CharacterController']}],
  ts:{cases:[
-  {t:'늦게 접속한 사람에게는 문이 닫혀 있고 전광판이 비어 있었다',rows:[
+  {t:'늦게 접속한 사람에게는 문이 닫혀 있고 전광판이 비어 있었다',v:'assets/vr_doorB.mp4',img:'assets/vr_doorB.jpg',cap:'수정 후 · 두 번째 클라이언트 화면',rows:[
    ['현상','열차가 이미 도착해 문이 열린 상태에서 접속하면, 그 사람 화면에서만 문이 닫혀 있고 혼잡도 전광판이 꺼져 있었습니다.'],
    ['원인','승객 수와 문 개폐를 RPC로 방송했습니다. RPC는 그 순간 방에 있던 사람에게만 갑니다. "이벤트"로 다뤘지만 실은 <b>"상태"</b>였던 것이 원인입니다.'],
    ['해결','RPC를 걷어내고 Room CustomProperties에 <code>IsDoorOpen · IsBoarding · PassengerCount</code>를 기록했습니다. 모두는 <code>OnRoomPropertiesUpdate</code>로 반응하고, 새로 들어온 사람은 <code>OnJoinedRoom</code>에서 현재 값을 읽습니다. 같은 코드가 실시간 갱신과 후발 복원을 함께 처리합니다.'],
    ['함께 고침','도착 상태에 머무는 동안 <code>OnArrive</code>가 매 프레임 발행되던 것을 플래그로 1회만 발행하게 막았습니다. 문 애니메이션이 지글거리던 증상의 원인이었습니다.']]}],
   retro:['"동기화"를 하나로 뭉뚱그리지 않게 됐습니다. 상태인지 사건인지 스트림인지 먼저 묻습니다.','인터페이스로 통신 규격을 먼저 정하겠습니다. 규격 없이 이벤트를 추가하다 보니 이름이 제각각이 됐습니다.','풀링으로 GC를 줄였다고 말하려면 Profiler 수치가 있어야 합니다. 다음엔 측정부터 하겠습니다.']}},
 
-{id:'nyankov',title:'NyanKov',name:'NyanKov',period:'2026.03 — 04',one:'3D 쿼터뷰 익스트랙션 슈팅 · 인벤토리',mark:'N',
+{id:'nyankov',title:'NyanKov',name:'NyanKov',period:'2026.03 — 04',one:'3D 쿼터뷰 익스트랙션 슈팅 · 인벤토리',img:'assets/nk_inv.png',
  ov:{
-  lead:'크래프팅과 구간 해금 구조의 <b>3D 쿼터뷰 익스트랙션 슈팅</b>. 팀에서 <b>인벤토리 시스템 전체</b>를 혼자 설계·구현했습니다.',
+  lead:'크래프팅과 구간 해금 구조의 <b>3D 쿼터뷰 익스트랙션 슈팅</b>. 4인 팀(개발 2 · 그래픽 2)에서 <b>인벤토리 시스템 전체</b>를 혼자 설계·구현했습니다.',
   body:['데이터 모델부터 5종 컨테이너, 드래그&드롭 UI, 제작·수리의 재료 소비 트랜잭션, 무게에 따른 이동속도 연동까지 담당했습니다.','다른 팀원의 플레이어·퀵슬롯·장비 코드가 제 모델 API를 호출하는 <b>공급자 쪽</b>이었기 때문에, 기능보다 <b>데이터가 사라지거나 늘어나지 않는 것</b>을 먼저 신경 썼습니다.'],
   roles:['MVP','Flyweight','Facade','ScriptableObject','Drag & Drop UI','Crafting Transaction'],
   credit:'플레이어 조작·스탯·전투, 적 AI, 카메라, 월드 아이템 풀링, 팀 공용 이벤트 버스(Subject&lt;T&gt;)는 다른 팀원 담당입니다.',
   links:[['https://github.com/peace03/MBC_3DPortfolio_sasinamu','REPOSITORY ↗']],
-  stats:[[35,' / 100','My commits / team total'],[33,'','Inventory scripts'],[23,'','ItemData (ScriptableObject)'],[5,'','Containers on one model']]},
+  stats:[[35,' / 100','My commits / team total'],[33,'','Inventory scripts'],[23,'','ItemData (ScriptableObject)'],[5,'','Containers on one model'],['4',' 人','Team (dev 2 · art 2)'],['Unity 6','','Engine · URP']],
+  drive:'1tqZoO9vt0NS96OfdSZ46YIr3k_-f7rL0',driveCap:'Team video'},
  stages:[
-  {t:'다섯 개의 컨테이너를 같은 모델로',
+  {t:'다섯 개의 컨테이너를 같은 모델로',img:'assets/nk_drag.jpg',v:'assets/nk_drag.mp4',raw:1,cap:'Drag and drop',
    d:'장비창·가방·퀵슬롯·창고·상자는 규칙이 전부 다르지만 "슬롯 배열에 아이템을 넣고 빼는" 본질은 같습니다.',
    li:['<code>InventoryModel</code>을 MonoBehaviour가 아닌 <b>순수 C# 클래스</b>로 만들고 컨테이너마다 인스턴스 하나씩','컨테이너별 차이(장비 타입 검사, 가방 용량 가변)는 <code>InventoryPresenter</code>가 흡수','View는 Presenter를 모르고 Model은 View를 모름 — 이벤트로만 연결돼 슬롯 UI를 통째로 바꿔도 모델 코드는 그대로','<code>FacadeView</code> → 7종 View (Bag · Quick · Storage · Box · Equip …)'],
    g:['MVP','Facade','Pure C# Model']},
-  {t:'Flyweight — 데이터와 개체 상태 분리',
+  {t:'Flyweight — 데이터와 개체 상태 분리',img:'assets/nk_stat.jpg',v:'assets/nk_stat.mp4',raw:1,cap:'Item stat tooltip',
    d:'나무 6개를 주웠을 때 이름·아이콘·무게를 6번 복사할 이유가 없습니다. 반대로 총의 남은 탄약이나 내구도는 개체마다 달라야 합니다.',
    li:['변하지 않는 값은 <code>ItemData</code> ScriptableObject 하나에(공유), 변하는 값만 런타임 <code>Item</code> 인스턴스가 보유','두 계층이 거울처럼 대응하도록 상속 트리를 맞춤 (ItemData 9종 ↔ Item 9종)','아이템을 늘릴 때 코드가 아니라 에셋을 추가 — 23종을 SO로만 만들고 밸런스는 인스펙터에서 조정'],
    g:['Flyweight','ScriptableObject','Data-driven']},
-  {t:'제작 — 여러 컨테이너에 걸친 트랜잭션',
+  {t:'제작 — 여러 컨테이너에 걸친 트랜잭션',img:'assets/nk_craft.png',cap:'Crafting table',
    d:'나무 5개가 가방에 3개, 창고에 2개로 흩어져 있어도 제작은 성공해야 하고, 재료만 사라지고 결과물이 증발하는 일은 없어야 합니다.',
    li:['차감은 폭포수 — 가방에서 깎고 남은 요구량을 창고, 퀵슬롯 순으로 넘김. <code>ConsumeItem</code>이 "남은 차감량"을 반환하는 것이 핵심','적재는 우선순위 캐스케이드 — 가방 → 창고 → 실패하면 월드에 드랍. 마지막 드랍이 데이터 증발을 막는 안전망','무게는 막는 값이 아니라 느려지는 값 — 총 무게를 이벤트로 발행하면 팀원의 <code>PlayerStat</code>이 이동속도 배율로 환산'],
    g:['Transaction','Event','API Design']},
-  {t:'UI 슬롯 사전 할당',
+  {t:'UI 슬롯 사전 할당',img:'assets/nk_event.jpg',v:'assets/nk_event.mp4',raw:1,cap:'Context menu',
    d:'가방 용량이 바뀔 때마다 슬롯 프리팹을 만들고 지우면 순간 렉이 생깁니다.',
    li:['최대치인 16칸을 시작할 때 한 번에 만들어 두고 용량 밖 슬롯은 꺼두기만 함 — 런타임 생성 0','드래그&드롭, 우클릭 컨텍스트 메뉴, 커서 추적 스탯 툴팁'],
    g:['UI','Pooling']}],
@@ -488,27 +496,28 @@ EventBus<HitStopEvent>.Publish(new HitStopEvent(HitStopFrame));`},
    ['판단','"가방 교체 막기"와 "초과분 삭제" 대신 이 방법을 고른 이유는 플레이어가 잃는 것이 없는 유일한 선택지였기 때문입니다.']]}],
   retro:['검증을 한 곳으로 모으겠습니다. 장비창이 얽힌 교환만 검사하고 있어 규칙이 늘면 빠지는 자리가 생깁니다.','제작 버튼을 UI 활성/비활성으로만 막고 있어, 실행 직전에 다시 검사하는 단계가 없습니다.']}},
 
-{id:'palegarden',title:'Pale Garden',name:'PaleGarden',period:'약 2주',one:'2D 생존 액션 · 1인 개발',mark:'PG',
+{id:'palegarden',title:'Pale Garden',name:'PaleGarden',period:'2026',one:'2D 생존 액션 · 1인 개발',img:'assets/pg_card.jpg',
  ov:{
   lead:'<b>2D 쿼터뷰 생존 액션</b>(뱀서류). 기획·설계·구현·UI·빌드까지 <b>혼자 완주</b>한 프로젝트입니다.',
   body:['화면에 몬스터가 많이 깔리는 장르라 처음부터 <b>"많아져도 안 무너지는 구조"</b>를 목표로 잡았습니다.','팀에서 한 파트만 맡을 때 보이지 않던 씬 흐름 · 데이터 수명 · 빌드가 어디서 엮이는지 여기서 먼저 겪었고, 이때 쓴 오브젝트 풀링 · FSM · 데이터 주도 설계가 이후 팀 프로젝트로 이어졌습니다.'],
   roles:['Object Pooling','Template Method','FSM','Observer','ScriptableObject','Cinemachine'],
   links:[['https://github.com/peace03/PaleGarden','REPOSITORY ↗']],
-  stats:[['1',' 人','Solo — plan to build'],[4,'','Object pools'],[3,'','Mob types'],[4,'','Attack types'],[10,'','PlayerStat events'],['Unity 2022',' LTS','Engine · 2D']]},
+  stats:[['1',' 人','Solo — plan to build'],[4,'','Object pools'],[3,'','Mob types'],[4,'','Attack types'],[10,'','PlayerStat events'],['Unity 2022',' LTS','Engine · 2D']],
+  drive:'1yaPJBu7vegidWEmVQc_O-hu6K2h6hUqE',driveCap:'Portfolio video · 7분 4초'},
  stages:[
-  {t:'오브젝트 풀 — 타입을 키로 쓰는 등록소',
+  {t:'오브젝트 풀 — 타입을 키로 쓰는 등록소',img:'assets/pg_swarm.jpg',cap:'Mob swarm',
    d:'몹이 끊임없이 생성되고 죽고, 경험치 구슬이 떨어지고, 투사체가 날아갑니다. 풀 4개(몹 · 경험치 · 마나탄 · 몹 투사체)를 만들었습니다.',
    li:['<code>Dictionary&lt;MobType, IObjectPool&gt;</code>를 등록소로 — 몹을 추가할 때 enum 한 줄, 인스펙터 한 줄이면 끝','직접 만들지 않고 Unity의 <code>IObjectPool</code> 사용 — 콜백이 규격화돼 있고 <code>collectionCheck</code>가 이중 반납을 잡아줌','꺼낼 때 풀 핸들을 함께 넘겨 객체가 <b>스스로 반납</b> — 매니저가 모든 객체의 수명을 추적하지 않아도 됨'],
    g:['Object Pooling','IObjectPool']},
-  {t:'Template Method — 같게 움직이고 다르게 때린다',
+  {t:'Template Method — 같게 움직이고 다르게 때린다',img:'assets/pg_class.png',cap:'Class diagram',
    d:'늑대·독새·팀버 크래셔는 플레이어를 향해 다가오는 것까지 똑같고 공격 방식만 다릅니다.',
    li:['추상 클래스 <code>Mob</code>이 이동·방향 반전·피격을 처리하고, 자식은 "공격 범위 판정"과 "공격"만 구현','이동 속도와 공격 루프 여부는 virtual 프로퍼티로 열어 필요할 때만 한 줄로 덮어씀','상속은 "종류의 차이"를, FSM은 "시간의 흐름"을 담당 — 돌진 몹 <code>{start, during, coolDown}</code>, 늑대 <code>{start, animation, end}</code>'],
    g:['Template Method','FSM','Inheritance']},
-  {t:'옵저버 — 싱글톤도 이벤트 버스도 아닌 이유',
+  {t:'옵저버 — 싱글톤도 이벤트 버스도 아닌 이유',img:'assets/pg_levelup.jpg',cap:'Level-up cards',
    d:'경험치는 전역에서 아무나 접근할 만큼 중요한 데이터가 아니라 싱글톤은 과했고, 구독자가 한둘뿐이라 이벤트 버스를 만들 만큼 크지도 않았습니다.',
    li:['C# <code>event Action</code>으로 발행자와 구독자를 직접 연결','<code>PlayerStat</code>이 이벤트 10개를 발행하고 HUD·상태창·레벨업·공격들이 필요한 것만 구독','HUD는 매 프레임 스탯을 읽지 않고 값이 바뀔 때만 갱신'],
    g:['Observer','event Action','HUD']},
-  {t:'물리 대신 계산으로',
+  {t:'물리 대신 계산으로',img:'assets/pg_sat.jpg',cap:'Satellite orbit',
    d:'엔진 물리에 맡기지 않고 수학으로 직접 푼 것들입니다.',
    li:['<b>링 위 스폰</b> — <code>insideUnitCircle.normalized</code>로 원 둘레에 놓고 반경만큼 밀어냄. 맵 밖이면 보정하지 않고 다시 뽑음 (경계로 밀면 모서리에 몰림)','<b>위성 공전</b> — <code>360/n</code>을 Cos·Sin으로 직접 계산. 레벨업으로 하나 늘면 전체가 알아서 재배치','<b>자동 조준</b> — 사거리 내 최단 거리 적 탐색','<b>연사 딜레이</b> — 반복문 대신 코루틴으로 0.1초 간격 발사'],
    g:['Math','Coroutine','Physics2D']}],
@@ -539,7 +548,7 @@ let pi=0,tab='overview',si=0;
 /* ── 1단계: 프로젝트 카드 ── */
 const deck=$('#deck');
 P.forEach((p,k)=>{const e=document.createElement('div');e.className='card'+(p.lock||p.mark?' lock':'');e.setAttribute('role','option');
-  if(p.img)e.style.backgroundImage=`url(${p.img})`;
+  if(p.img){e.style.backgroundImage=`url(${p.img})`;if(p.pos)e.style.backgroundPosition=p.pos}
   e.innerHTML=`${p.mark?`<span class="big">${p.mark}</span>`:''}<span class="m n">${pad(k)} · ${p.period}</span><span class="t">${p.title.replace(/<[^>]+>/g,'')}</span><span class="o">${p.one}</span>`;
   e.onclick=()=>pick(k);deck.appendChild(e)});
 function layout(){const gap=deck.firstChild.offsetWidth;
@@ -561,7 +570,8 @@ function render(){const p=P[pi];
 function crumb(){const p=P[pi],l=TABS.find(x=>x[0]===tab)[1];
   $('#crumb').innerHTML=`<span class="r">■</span> ${p.name} › <b>${l}</b>`+(tab==='stages'?` › <b>${pad(si)} ${p.stages[si].t}</b>`:'')}
 const play=el=>{const v=el.querySelector('video');if(v&&!RM)v.play().catch(()=>{})};
-const media=(s)=>s.v?`<div class="media"><span class="m tagv"><span class="r">●</span> ${s.cap}</span><div class="crop"><video src="${s.v}" poster="${s.img}" muted loop playsinline preload="none"></video></div></div>`
+const vid=(src,poster,cap)=>`<div class="media"><span class="m tagv"><span class="r">●</span> ${cap}</span><video class="plain" src="${src}" poster="${poster}" muted loop playsinline controls preload="none"></video></div>`;
+const media=(s)=>s.v&&s.raw?vid(s.v,s.img,s.cap):s.v?`<div class="media"><span class="m tagv"><span class="r">●</span> ${s.cap}</span><div class="crop"><video src="${s.v}" poster="${s.img}" muted loop playsinline preload="none"></video></div></div>`
   :s.img?`<div class="media"><span class="m tagv">${s.cap}</span><img src="${s.img}" alt="${s.t}"></div>`:'';
 const VIEW={
  overview:p=>{const o=p.ov;return `<div class="ov"><div>
@@ -571,19 +581,21 @@ const VIEW={
    <div class="cta" style="margin-top:22px">${has(p,'stages')?`<button class="btn p" data-t="stages">STAGES ${p.stages.length} ▶</button>`:''}${(o.links||[]).map(([h,l])=>`<a class="btn" href="${h}" target="_blank" rel="noopener">${l}</a>`).join('')}</div>
   </div>
   ${o.stats?`<div class="stats">${o.stats.map(([n,s,l])=>`<div><b ${typeof n==='number'?`data-n="${n}"`:''}>${typeof n==='number'?0:n}${s?`<small>${s}</small>`:''}</b><span class="m">${l}</span></div>`).join('')}</div>`
-   :o.video?`<div class="media"><span class="m tagv"><span class="r">●</span> ${o.cap}</span><video class="plain" src="${o.video}" poster="${p.img}" muted loop playsinline controls preload="none"></video></div>`:''}
-  </div>`},
+   :o.video?vid(o.video,o.poster||p.img,o.cap):''}
+  </div>
+  ${o.drive?`<div class="ovmedia"><div class="m"><span class="r">▶</span> ${o.driveCap}</div><div class="media"><iframe src="https://drive.google.com/file/d/${o.drive}/preview" title="${p.name} 영상" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div>`
+   :o.stats&&o.video?`<div class="ovmedia"><div class="m"><span class="r">▶</span> ${o.cap}</div>${vid(o.video,o.poster||p.img,o.cap)}</div>`:''}`},
  stages:p=>`<div class="slist" role="tablist" aria-label="스테이지">${p.stages.map((s,k)=>`<button role="tab" data-s="${k}"><span class="m">${pad(k)}</span>${s.t}</button>`).join('')}</div><div id="sdetail"></div>`,
  ai:p=>`<div class="flow">${p.ai.flow.map(([t,d],k)=>`<div><span class="m r">${pad(k)}</span><b>${t}</b><p>${d}</p></div>`).join('')}</div>
   <div class="cols">${p.ai.cols.map(([k,t,li],i)=>`<div class="box${i===2?' hot':''}"><span class="m${i===1?'':' r'}">${k}</span><h4>${t}</h4><ul>${li.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('')}</div>`,
  log:p=>`<ol class="log">${p.log.map(([d,t])=>`<li><span class="m r">${d}</span><span>${t}</span></li>`).join('')}</ol>`,
- ts:p=>`<div class="cases">${p.ts.cases.map((c,k)=>`<article class="case"><div class="m"><span class="r">CASE ${pad(k)}</span></div><h4>${c.t}</h4><dl>${c.rows.map(([a,b])=>`<dt class="m${a==='해결'?' r':''}">${a}</dt><dd>${b}</dd>`).join('')}</dl></article>`).join('')}</div>
+ ts:p=>`<div class="cases">${p.ts.cases.map((c,k)=>`<article class="case"><div class="m"><span class="r">CASE ${pad(k)}</span></div><h4>${c.t}</h4><dl>${c.rows.map(([a,b])=>`<dt class="m${a==='해결'?' r':''}">${a}</dt><dd>${b}</dd>`).join('')}</dl>${c.v?`<div class="casev">${vid(c.v,c.img,c.cap)}</div>`:''}</article>`).join('')}</div>
   ${p.ts.retro?`<div class="box hot retro"><span class="m r">→ Retrospective</span><h4>다시 만든다면</h4><ul>${p.ts.retro.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}`
 };
 function stage(k){const p=P[pi];si=Math.max(0,Math.min(p.stages.length-1,k));const s=p.stages[si],d=$('#sdetail');
   document.querySelectorAll('.slist button').forEach((b,i)=>b.setAttribute('aria-selected',i===si));
   const m=media(s);d.style.gridTemplateColumns=m?'':'1fr';
-  d.innerHTML=`${m}<div><div class="m"><span class="r">STAGE ${pad(si)}</span> / ${pad(p.stages.length-1)}</div><h4>${s.t}</h4><p>${s.d}</p><ul>${s.li.map(l=>`<li>${l}</li>`).join('')}</ul><div class="tags">${s.g.map(g=>`<span class="tg">${g}</span>`).join('')}</div>${s.code?`<pre><code>${esc(s.code)}</code></pre>`:''}${s.v?'<div class="note">영상은 Unity 에디터 플레이 화면을 녹화한 것입니다.</div>':''}</div>`;
+  d.innerHTML=`${m}<div><div class="m"><span class="r">STAGE ${pad(si)}</span> / ${pad(p.stages.length-1)}</div><h4>${s.t}</h4><p>${s.d}</p><ul>${s.li.map(l=>`<li>${l}</li>`).join('')}</ul><div class="tags">${s.g.map(g=>`<span class="tg">${g}</span>`).join('')}</div>${s.code?`<pre><code>${esc(s.code)}</code></pre>`:''}${s.v&&!s.raw?'<div class="note">영상은 Unity 에디터 플레이 화면을 녹화한 것입니다.</div>':''}</div>`;
   d.classList.remove('sw');void d.offsetWidth;d.classList.add('sw');
   history.replaceState(null,'','#'+p.id+'/stages/'+(si+1));crumb();play(d)}
 function count(b){const n=+b.dataset.n,t0=performance.now();
@@ -599,7 +611,7 @@ addEventListener('pointerup',e=>{if(tx===null)return;const d=e.clientX-tx;tx=nul
 addEventListener('resize',layout);
 
 /* ── 주소(#프로젝트/탭/스테이지번호)로 바로 열기 ── */
-function route(){const [id,t,s]=location.hash.slice(1).split('/'),k=P.findIndex(p=>p.id===id);if(k<0)return false;pick(k,t,Math.max(0,(+s||1)-1));return true}
+function route(){const [id,t,s]=location.hash.slice(1).split('/'),k=P.findIndex(p=>p.id===(id==='hyunmu'?'cheolmuk':id));if(k<0)return false;pick(k,t,Math.max(0,(+s||1)-1));return true}
 addEventListener('hashchange',route);
 const deep=route();if(!deep){const h=location.hash;pick(0);if(h)history.replaceState(null,'',h)}
 

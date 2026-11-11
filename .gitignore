@@ -1,0 +1,4 @@
+# 로컬 AI 도구·미리보기 설정 (사이트와 무관)
+.agents/
+.claude/
+skills-lock.json

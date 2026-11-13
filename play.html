@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>윤평화 — Play</title>
+<meta name="description" content="윤평화 포트폴리오 인터랙션 버전. 프로젝트들이 기술로 이어진 지도에서 하나를 고르고, 그 프로젝트의 핵심을 직접 만져 봅니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#0A0A0B;--panel:#141416;--line:#26262b;--red:#FF2D3D;--deep:#7A0F18;--fg:#EDEDED;--dim:#8A8A92;--ok:#4ade80;
+  --sans:'Pretendard',-apple-system,'Malgun Gothic',sans-serif;--disp:'Space Grotesk',var(--sans);--mono:'JetBrains Mono',Consolas,monospace}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.m{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+.r{color:var(--red)}
+#bgc{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ── 지도 화면 ── */
+#home{position:fixed;inset:0;display:flex;flex-direction:column;padding:18px clamp(16px,4vw,48px) 20px;transition:opacity .3s,transform .4s}
+body.in #home{opacity:0;transform:scale(1.04);pointer-events:none}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top a:hover{color:var(--red)}
+.intro{margin:clamp(8px,2.5vh,26px) 0 0}
+.intro h1{font-family:var(--disp);font-size:clamp(24px,3.6vw,48px);line-height:1.12;letter-spacing:-.03em;margin:8px 0 6px}
+.intro p{margin:0;color:var(--dim);font-size:clamp(13px,1.3vw,16px)}
+#map{position:relative;flex:1;min-height:0;margin:8px 0}
+#map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#map svg .path{stroke:#34343a;stroke-width:1.5;stroke-dasharray:4 7;fill:none}
+#map svg .link{stroke:var(--red);stroke-width:2.5;fill:none;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(255,45,61,.6))}
+.node{position:absolute;transform:translate(-50%,-50%);background:none;border:0;padding:0;text-align:center;width:clamp(96px,11vw,150px);transition:opacity .25s,transform .25s}
+.node .th{display:block;width:100%;aspect-ratio:1;border-radius:50%;border:2px solid #3a3a40;background:#141416 center/cover;transition:.25s;position:relative;overflow:hidden}
+.node .th i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-style:normal;font-size:38px;color:var(--red)}
+.node b{display:block;margin-top:9px;font-size:clamp(13px,1.2vw,16px);line-height:1.2}
+.node .m{display:block;font-size:10.5px;margin-top:2px}
+.node .num{position:absolute;left:50%;top:-9px;transform:translateX(-50%);background:var(--bg);border:1px solid #3a3a40;font-family:var(--mono);font-size:11px;padding:1px 7px;z-index:1}
+.node:hover{transform:translate(-50%,-50%) scale(1.07)}
+.node:hover .th,.node.hot .th{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,45,61,.25),0 0 40px -6px rgba(255,45,61,.7)}
+#map.filter .node:not(.hot){opacity:.25}
+#techs{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;align-items:center}
+#techs button{background:none;border:1px solid #2f2f34;padding:8px 13px;font-size:13.5px;font-weight:600;color:#b0b0b8;transition:.2s}
+#techs button:hover{border-color:#5a5a62;color:#fff}
+#techs button[aria-pressed=true]{background:var(--red);border-color:var(--red);color:#0A0A0B}
+#techs small{font-family:var(--mono);font-size:10.5px;opacity:.7;margin-left:5px}
+.foot{text-align:center;margin-top:10px}
+
+/* ── 프로젝트 화면 ── */
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;padding:14px clamp(14px,3vw,40px) 16px;opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+body.in #stage{opacity:1;pointer-events:auto;transform:none}
+.sh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.sh .back{background:var(--red);border:0;color:#0A0A0B;font-weight:700;font-size:13.5px;padding:9px 14px}
+.sh .explore-link{font-size:13.5px;padding:9px 4px;color:#dedee4}
+.sh .explore-link:hover{color:var(--red)}
+#mini{display:flex;gap:6px;flex-wrap:wrap}
+#mini button{background:none;border:1px solid #2A2A2E;padding:8px 11px;font-size:13px;font-weight:600;color:#9a9aa2;transition:.2s}
+#mini button:hover{color:#fff;border-color:#5a5a62}
+#mini button[aria-current=true]{border-color:var(--red);color:#fff;background:rgba(255,45,61,.12)}
+#mini kbd{font-family:var(--mono);font-size:10.5px;color:var(--red);margin-right:6px}
+.sb{flex:1;min-height:0;display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(14px,2.4vw,32px)}
+.toy{display:flex;flex-direction:column;min-height:0;border:1px solid var(--line);background:var(--panel)}
+.tt{padding:14px 18px;border-bottom:1px solid var(--line)}
+.tt b{font-family:var(--disp);font-size:clamp(17px,1.8vw,22px)}
+.tt span{display:block;color:var(--dim);font-size:13.5px;margin-top:3px;line-height:1.45}
+#box{position:relative;flex:1;min-height:220px;overflow:hidden;touch-action:none}
+#box canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);min-height:58px}
+#ctl button{background:none;border:1px solid #3a3a40;padding:8px 13px;font-size:13.5px;font-weight:600;transition:.2s}
+#ctl button:hover{border-color:var(--red);color:var(--red)}
+#ctl button.on{background:var(--red);border-color:var(--red);color:#0A0A0B}
+#ctl button.fix.on{background:var(--ok);border-color:var(--ok)}
+#ctl .stat{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin-left:auto}
+#ctl .stat b{color:#fff}
+#ctl label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px}
+#ctl input[type=range]{accent-color:var(--red);width:120px}
+aside{overflow:auto;padding-right:4px}
+aside h2{font-family:var(--disp);font-size:clamp(30px,4vw,56px);line-height:1;letter-spacing:-.03em;margin:8px 0 12px}
+aside p{color:#c9c9cf;font-size:15.5px;line-height:1.6;margin:0 0 16px}
+aside p b{color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.chips span,.chips button{border:1px solid #2f2f34;background:#101012;padding:7px 12px;font-size:13.5px;font-weight:600}
+.chips button:hover{border-color:var(--red);color:var(--red)}
+.lesson{border-left:2px solid var(--red);padding:2px 0 2px 14px;margin:0 0 18px;font-size:14.5px;color:#c9c9cf;line-height:1.55}
+.nextp{display:block;width:100%;text-align:left;background:#101012;border:1px solid var(--line);padding:14px 16px;margin-bottom:16px;transition:.2s}
+.nextp:hover{border-color:var(--red)}
+.nextp b{display:block;font-size:16px;margin-top:4px}
+.nextp span{display:block;color:var(--dim);font-size:13.5px;margin-top:4px;line-height:1.5}
+.cta{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font-family:var(--mono);font-size:13px;font-weight:700;padding:11px 16px;border:1px solid #3A3A3F;transition:.2s}
+.btn:hover{border-color:var(--red);color:var(--red)}
+.btn.p{background:var(--red);border-color:var(--red);color:#0A0A0B}
+
+/* 놀이: 가방 */
+.bagwrap{position:absolute;inset:0;display:flex;gap:18px;align-items:center;justify-content:center;padding:16px;flex-wrap:wrap}
+.bag{display:grid;grid-template-columns:repeat(4,clamp(44px,5.4vw,64px));gap:6px}
+.slot{aspect-ratio:1;border:1px solid #34343a;background:#0f0f11;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;padding:0;transition:.2s}
+.slot.off{opacity:.18;border-style:dashed}
+.slot.it{color:#0A0A0B}
+.slot.sel{outline:2px solid #fff;outline-offset:2px}
+.slot.gone{animation:gone .5s forwards}
+@keyframes gone{to{transform:scale(.2);opacity:0}}
+.chest{border:1px dashed var(--ok);padding:10px;min-width:120px;text-align:center}
+.chest .bag{grid-template-columns:repeat(3,44px);margin-top:8px}
+/* 놀이: 늦은 접속 */
+.net{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px;align-items:center}
+.scr{border:1px solid #34343a;background:#0f0f11;padding:12px;text-align:center;transition:.3s}
+.scr.offl{opacity:.35}
+.scr.bad{border-color:var(--red);box-shadow:0 0 30px -8px var(--red)}
+.scr.good{border-color:var(--ok)}
+.door{position:relative;height:clamp(90px,16vh,150px);margin:10px auto;max-width:220px;background:#1b2a3a;overflow:hidden;border:2px solid #44444c}
+.door i{position:absolute;top:0;bottom:0;width:50%;background:#5c6b7c;border:1px solid #2a323c;transition:transform .5s}
+.door i:first-child{left:0}.door i:last-child{right:0}
+.door.open i:first-child{transform:translateX(-92%)}.door.open i:last-child{transform:translateX(92%)}
+/* 놀이: 키보드 */
+.kb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px}
+.kb .out{font-family:var(--mono);font-size:clamp(18px,2.4vw,28px);min-height:1.6em;margin-bottom:12px;border-bottom:2px solid var(--red);padding:0 8px;min-width:60%;text-align:center}
+.kb .row{display:flex;gap:5px}
+.key{position:relative;width:clamp(26px,3.6vw,46px);aspect-ratio:1;border:1px solid #3a3a40;background:#0f0f11;font-family:var(--mono);font-size:14px;font-weight:700;padding:0;overflow:hidden}
+.key.sp{width:clamp(140px,22vw,260px);aspect-ratio:auto;height:clamp(26px,3.6vw,46px)}
+.key::after{content:"";position:absolute;left:0;bottom:0;height:100%;width:0;background:rgba(255,45,61,.55);z-index:0}
+.key.dw::after{width:100%;transition:width .38s linear}
+.key span{position:relative;z-index:1}
+.key.hit{background:var(--red);color:#0A0A0B}
+
+@media (max-width:820px){
+  html,body{overflow:auto}
+  #home,#stage{position:absolute;min-height:100%;inset:0 0 auto 0}
+  #map{display:grid;grid-template-columns:1fr 1fr;gap:18px 10px;padding:14px 0}
+  #map svg{display:none}
+  .node{position:relative;transform:none;left:auto!important;top:auto!important;width:100%;max-width:150px;margin:0 auto}
+  .node:hover{transform:none}
+  .sb{grid-template-columns:1fr;flex:none}
+  #box{min-height:300px}
+  body.in #home{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="bgc" aria-hidden="true"></canvas>
+
+<!-- 지도: 모든 프로젝트가 한 화면에, 만든 순서대로 이어져 있다 -->
+<main id="home">
+  <div class="top"><span class="m" style="color:#fff">YPH<span class="r">.</span>PLAY</span><a class="m" href="index.html">기본 사이트 →</a></div>
+  <div class="intro">
+    <div class="m"><span class="r">■</span> 윤평화 · Game Client Programmer</div>
+    <h1>프로젝트는 따로가 아니라 <span class="r">이어져</span> 있습니다.</h1>
+    <p>동그라미를 누르면 바로 열리고, 그 프로젝트의 핵심을 직접 만져 볼 수 있습니다. 아래 기술을 누르면 어디서 어디로 이어졌는지 보입니다.</p>
+  </div>
+  <div id="map"><svg aria-hidden="true"><path class="path" id="chrono"/><path class="link" id="link"/></svg></div>
+  <div id="techs" role="group" aria-label="기술로 연결 보기"></div>
+  <div class="m foot">숫자키 <span class="r">1–6</span> 바로 열기 · <span class="r">Esc</span> 지도로</div>
+</main>
+
+<!-- 프로젝트: 왼쪽은 직접 만지는 놀이, 오른쪽은 짧은 설명 -->
+<section id="stage" aria-live="polite">
+  <div class="sh"><button class="back" id="back">← 지도</button><a class="explore-link" href="gate-portfolio.html#explore">포탈 탐험으로</a><div id="mini"></div></div>
+  <div class="sb">
+    <div class="toy"><div class="tt"><b id="tt"></b><span id="td"></span></div><div id="box"></div><div id="ctl"></div></div>
+    <aside id="info"></aside>
+  </div>
+</section>
+
+<script>
+const $=s=>document.querySelector(s),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+
+/* ══ 놀이 도구 ══ 각 놀이는 (box, ctl)을 받아 화면을 만들고, 멈추는 함수를 돌려준다 */
+function mk(box){const c=el('canvas'),g=c.getContext('2d');box.appendChild(c);let w,h;
+  const fit=()=>{const d=Math.min(devicePixelRatio||1,2);w=box.clientWidth;h=box.clientHeight;c.width=w*d;c.height=h*d;g.setTransform(d,0,0,d,0,0)};fit();
+  const ro=new ResizeObserver(fit);ro.observe(box);
+  return {c,g,get w(){return w},get h(){return h},off:()=>ro.disconnect()}}
+function loop(fn){let id,last=performance.now(),on=true;(function f(t){if(!on)return;id=requestAnimationFrame(f);fn(Math.min(.05,(t-last)/1000),t);last=t})(last);return()=>{on=false;cancelAnimationFrame(id)}}
+const btn=(ctl,label,fn,cls)=>{const b=el('button',cls,label);b.onclick=()=>fn(b);ctl.appendChild(b);return b};
+const stat=ctl=>{const s=el('span','stat');ctl.appendChild(s);return s};
+function sparks(){const a=[];return{add(x,y,n,col){for(let i=0;i<n;i++){const t=Math.random()*6.28,v=60+Math.random()*320;a.push({x,y,vx:Math.cos(t)*v,vy:Math.sin(t)*v,l:1,col})}},
+  draw(g,dt){for(const p of a){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.94;p.vy*=.94;p.l-=dt*1.6;g.globalAlpha=Math.max(0,p.l);g.fillStyle=p.col;g.fillRect(p.x-2,p.y-2,4,4)}g.globalAlpha=1;
+    for(let i=a.length-1;i>=0;i--)if(a[i].l<=0)a.splice(i,1)}}}
+const ring=(g,x,y,r,col,lw)=>{g.beginPath();g.arc(x,y,Math.max(0,r),0,6.283);g.strokeStyle=col;g.lineWidth=lw;g.stroke()};
+const text=(g,s,x,y,sz,col,al='center')=>{g.font=`700 ${sz}px Pretendard,sans-serif`;g.textAlign=al;g.fillStyle=col;g.fillText(s,x,y)};
+
+/* 1. 철과 묵 — 받아치기: 줄어드는 원이 과녁에 닿는 순간(±0.1초) 누른다 */
+function toyParry(box,ctl){const K=mk(box),g=K.g,sp=sparks(),T=1.3,WIN=.1;let t=-.6,res='',resT=0,stop=0,streak=0,steam=0,best=0,flash=0;
+  const st=stat(ctl);const upd=()=>st.innerHTML=`연속 <b>${streak}</b> · 최고 <b>${best}</b> · 판정 <b>±0.1초</b>`;upd();
+  const hit=()=>{if(t<0||res)return;const d=t-T;if(Math.abs(d)<=WIN){res='받아치기!';streak++;best=Math.max(best,streak);steam=Math.min(1,steam+.25);stop=.12;sp.add(K.w/2,K.h/2,70,'#FF2D3D');
+      if(steam>=1){flash=1;steam=0;res='강공격!';sp.add(K.w/2,K.h/2,160,'#fff')}}
+    else{res=d<0?`빨랐다 (${(-d).toFixed(2)}초)`:`늦었다 (${d.toFixed(2)}초)`;streak=0}resT=.9;upd()};
+  const key=e=>{if(e.code==='Space'){e.preventDefault();hit()}};addEventListener('keydown',key);K.c.addEventListener('pointerdown',hit);
+  const end=loop(dt=>{const w=K.w,h=K.h,cx=w/2,cy=h/2,R=Math.min(w,h)*.13;
+    if(stop>0){stop-=dt;dt=0} // 히트스탑: 성공한 순간 시간을 잠깐 멈춤
+    if(res){resT-=dt;if(resT<=0){res='';t=-.5-Math.random()*.6}}else{t+=dt;if(t>T+WIN+.02){res='놓쳤다';streak=0;resT=.8;upd()}}
+    g.clearRect(0,0,w,h);if(flash>0){g.fillStyle=`rgba(255,45,61,${flash*.35})`;g.fillRect(0,0,w,h);flash-=dt*2}
+    g.fillStyle='#7A0F18';g.beginPath();g.arc(cx,cy,R*.55,0,6.283);g.fill();ring(g,cx,cy,R,'#fff',3);
+    if(t>=0&&!res){const p=t/T,rr=R+(1-Math.min(1,p))*Math.min(w,h)*.36;ring(g,cx,cy,rr,Math.abs(t-T)<=WIN?'#FF2D3D':'#8A8A92',Math.abs(t-T)<=WIN?6:3)}
+    sp.draw(g,dt||.016);
+    if(res)text(g,res,cx,cy-R-26,26,/치기|강공격/.test(res)?'#FF2D3D':'#8A8A92');
+    // 증기 게이지: 받아칠 때마다 차고, 가득 차면 강공격
+    const bw=Math.min(260,w*.5);g.fillStyle='#232327';g.fillRect(cx-bw/2,h-34,bw,8);g.fillStyle='#FF2D3D';g.fillRect(cx-bw/2,h-34,bw*steam,8);text(g,'증기',cx-bw/2-10,h-26,12,'#8A8A92','right');
+    text(g,'화면을 누르거나 Space',cx,26,13,'#8A8A92')});
+  return()=>{end();K.off();removeEventListener('keydown',key)}}
+
+/* 2. Grimoire — 시계 두 개와 한 개: 보이는 링과 실제 판정이 어긋나는 이유 */
+function toyClocks(box,ctl){const K=mk(box),g=K.g,sp=sparks(),T=1.2,WIN=.12;let one=false,spd=1,t=-.4,res='',resT=0;
+  const bm=btn(ctl,'',b=>{one=!one;lab()},'fix');const lab=()=>{bm.textContent=one?'시계 1개 (수정 후)':'시계 2개 (버그)';bm.classList.toggle('on',one);gap()};
+  const sb=[.5,1,2].map(v=>btn(ctl,v+'×',()=>{spd=v;sb.forEach((b,i)=>b.classList.toggle('on',[.5,1,2][i]===v));gap()}));sb[1].classList.add('on');
+  const st=stat(ctl);const real=()=>T/spd,vis=()=>one?T/spd:T; // 판정은 애니메이션 시간, 링은 (버그일 때) 따로 도는 시계
+  const gap=()=>{const d=Math.abs(vis()-real());st.innerHTML=`어긋남 <b style="color:${d>.01?'#FF2D3D':'#4ade80'}">${d.toFixed(2)}초</b>`};lab();
+  const hit=()=>{if(t<0||res)return;const ok=Math.abs(t-real())<=WIN,ring_ok=Math.abs(t-vis())<=WIN;
+    res=ok?'패링 성공':ring_ok?'링은 맞았는데 판정 실패':'실패';if(ok)sp.add(K.w/2,K.h*.42,60,'#FF2D3D');resT=1.1};
+  const key=e=>{if(e.code==='Space'){e.preventDefault();hit()}};addEventListener('keydown',key);K.c.addEventListener('pointerdown',hit);
+  const end=loop(dt=>{const w=K.w,h=K.h,cx=w/2,cy=h*.42,R=Math.min(w,h)*.11,fin=Math.max(vis(),real())+.35;
+    if(res){resT-=dt;if(resT<=0){res='';t=-.5}}else{t+=dt;if(t>fin){t=-.5}}
+    g.clearRect(0,0,w,h);g.fillStyle='#7A0F18';g.beginPath();g.arc(cx,cy,R*.55,0,6.283);g.fill();ring(g,cx,cy,R,'#fff',3);
+    if(t>=0){const p=Math.min(1,t/vis());ring(g,cx,cy,R+(1-p)*Math.min(w,h)*.3,'#EDEDED',3)}
+    sp.draw(g,dt);if(res)text(g,res,cx,cy-R-22,22,res==='패링 성공'?'#4ade80':'#FF2D3D');
+    // 아래 시간 막대: 링이 다 줄어든 순간과 실제 판정 순간
+    const x0=w*.12,x1=w*.88,y=h*.82,X=v=>x0+(x1-x0)*Math.min(1,v/2.75);g.fillStyle='#232327';g.fillRect(x0,y,x1-x0,4);
+    g.fillStyle='rgba(74,222,128,.35)';g.fillRect(X(real()-WIN),y-9,X(real()+WIN)-X(real()-WIN),22);
+    g.fillStyle='#EDEDED';g.fillRect(X(vis())-1.5,y-16,3,36);
+    text(g,'링이 다 줄어듦',X(vis()),y-22,12,'#EDEDED');text(g,'실제 판정 구간',X(real()),y+36,12,'#4ade80');
+    if(t>=0){g.fillStyle='#FF2D3D';g.beginPath();g.arc(X(t),y+2,5,0,6.283);g.fill()}
+    text(g,'링이 과녁에 닿을 때 누르세요',cx,24,13,'#8A8A92')});
+  return()=>{end();K.off();removeEventListener('keydown',key)}}
+
+/* 3. NyanKov — 가방을 줄여도 아이템이 사라지지 않게 */
+function toyBag(box,ctl){const NAMES=[['나무','#c08a52'],['돌','#9aa0a8'],['실','#e8d8b0'],['배터리','#f0b429'],['키트','#ff6b6b'],['사과','#e5484d'],['로프','#b58a5a'],['열쇠','#5b8def'],['금속','#aab4c0'],['테이프','#4c6ef5'],['부품','#8fd19e'],['총','#d0d0d6'],['천','#c9a0dc'],['약','#7dd3c0']];
+  let fix=false,cap=16,slots,chest,lost,sel=-1;const wrap=el('div','bagwrap');box.appendChild(wrap);
+  const reset=()=>{cap=16;chest=[];lost=0;sel=-1;slots=Array(16).fill(null);[0,1,3,4,5,6,7,9,10,11,12,13,14,15].forEach((s,i)=>slots[s]=i);draw()};
+  const st=()=>{sta.innerHTML=`칸 <b>${cap}</b> · 사라진 아이템 <b style="color:${lost?'#FF2D3D':'#4ade80'}">${lost}</b>`};
+  function draw(gone=[]){wrap.innerHTML='';const b=el('div','bag');
+    slots.forEach((it,i)=>{const s=el('button','slot'+(i>=cap?' off':'')+(it!=null?' it':'')+(i===sel?' sel':'')+(gone.includes(i)?' gone':''),it!=null?NAMES[it][0]:'');
+      if(it!=null)s.style.background=NAMES[it][1];s.disabled=i>=cap&&it==null;s.setAttribute('aria-label',(it!=null?NAMES[it][0]:'빈 칸')+' '+(i+1)+'번 칸');
+      s.onclick=()=>{if(i>=cap)return;if(sel<0){if(it!=null){sel=i;draw()}}else{[slots[sel],slots[i]]=[slots[i],slots[sel]];sel=-1;draw()}};b.appendChild(s)});
+    wrap.appendChild(b);
+    if(chest.length){const c=el('div','chest','<span class="m" style="color:#4ade80">발밑에 생긴 상자</span>'),cb=el('div','bag');
+      chest.forEach(it=>{const s=el('div','slot it',NAMES[it][0]);s.style.background=NAMES[it][1];cb.appendChild(s)});c.appendChild(cb);wrap.appendChild(c)}
+    st()}
+  const bf=btn(ctl,'',()=>{fix=!fix;lab();reset()},'fix');const lab=()=>{bf.textContent=fix?'수정 후':'수정 전 (버그)';bf.classList.toggle('on',fix)};
+  btn(ctl,'작은 가방으로 교체 (16 → 13칸)',()=>{if(cap===13)return;cap=13;
+    if(fix){const keep=slots.filter(x=>x!=null);chest=keep.slice(13);slots=[...keep.slice(0,13),...Array(16).fill(null)].slice(0,16);draw()} // 앞으로 압축, 넘치는 것만 상자로
+    else{const gone=[13,14,15].filter(i=>slots[i]!=null);lost=gone.length;draw(gone);setTimeout(()=>{gone.forEach(i=>slots[i]=null);draw()},500)}}); // 뒤에서부터 잘라 버림
+  btn(ctl,'처음으로',reset);const sta=stat(ctl);lab();reset();return()=>{}}
+
+/* 4. SmartCity VR — 늦게 접속한 사람에게도 문이 열려 있는가 */
+function toyLate(box,ctl){let fix=false,door=false,bOn=false,bDoor=false;const n=el('div','net');box.appendChild(n);
+  n.innerHTML=`<div class="scr"><span class="m">A · 방장</span><div class="door"><i></i><i></i></div><b></b></div><div class="scr"><span class="m">B · 나중에 접속</span><div class="door"><i></i><i></i></div><b></b></div>`;
+  const A=n.children[0],B=n.children[1];
+  const draw=()=>{A.querySelector('.door').classList.toggle('open',door);A.querySelector('b').textContent=door?'문 열림':'문 닫힘';A.className='scr good';
+    B.querySelector('.door').classList.toggle('open',bOn&&bDoor);const ok=bDoor===door;
+    B.className='scr'+(bOn?(ok?' good':' bad'):' offl');B.querySelector('b').innerHTML=!bOn?'접속 전':ok?(bDoor?'문 열림':'문 닫힘'):`문 ${bDoor?'열림':'닫힘'} <span class="r">— 방장과 다름</span>`;
+    bd.textContent=door?'문 닫기':'문 열기';bj.textContent=bOn?'B 나가기':'B 접속하기';
+    st.innerHTML=!bOn?'B가 아직 없음':ok?'<b style="color:#4ade80">두 화면 일치</b>':'<b style="color:#FF2D3D">불일치 — 눈앞의 열차에 탈 수 없음</b>'};
+  const bf=btn(ctl,'',()=>{fix=!fix;door=false;bOn=false;bDoor=false;lab();draw()},'fix');const lab=()=>{bf.textContent=fix?'방 상태로 기록 (수정 후)':'RPC로 방송 (버그)';bf.classList.toggle('on',fix)};
+  const bd=btn(ctl,'',()=>{door=!door;if(bOn)bDoor=door;draw()}); // 접속해 있는 사람은 어느 방식이든 받는다
+  const bj=btn(ctl,'',()=>{bOn=!bOn;bDoor=bOn&&fix?door:false;draw()}); // 새로 들어온 사람: RPC는 지나간 방송을 못 받고, 방 상태는 읽어서 맞춘다
+  const st=stat(ctl);lab();draw();return()=>{}}
+
+/* 5. Pale Garden — 몹 떼와 오브젝트 풀링 */
+function toySwarm(box,ctl){const K=mk(box),g=K.g,sp=sparks();let pool=true,want=80,sat=2,made=0,reused=0,px=0,py=0,tx=null,ty=null,ang=0;const mobs=[];
+  const spawn=m=>{const a=Math.random()*6.283,r=Math.max(K.w,K.h)*.62;m.x=px+Math.cos(a)*r;m.y=py+Math.sin(a)*r;m.s=38+Math.random()*34;return m}; // 화면 밖 원 둘레에서 등장
+  const bp=btn(ctl,'',()=>{pool=!pool;made=mobs.length;reused=0;lab()},'fix');const lab=()=>{bp.textContent=pool?'풀링 켬':'풀링 끔';bp.classList.toggle('on',pool)};
+  const lb=el('label','','몹 수 <input type="range" min="20" max="400" value="80" aria-label="몹 수">');ctl.appendChild(lb);lb.querySelector('input').oninput=e=>want=+e.target.value;
+  const st=stat(ctl);lab();
+  const mv=e=>{const r=K.c.getBoundingClientRect();tx=e.clientX-r.left;ty=e.clientY-r.top};K.c.addEventListener('pointermove',mv);K.c.addEventListener('pointerdown',e=>{mv(e);sat=sat%8+1});
+  const end=loop(dt=>{const w=K.w,h=K.h;if(tx==null){tx=px=w/2;ty=py=h/2}px+=(tx-px)*.18;py+=(ty-py)*.18;ang+=dt*2.6;
+    while(mobs.length<want){mobs.push(spawn({}));made++}if(mobs.length>want)mobs.length=want;
+    g.clearRect(0,0,w,h);const S=[];for(let i=0;i<sat;i++){const a=ang+i*6.283/sat;S.push([px+Math.cos(a)*54,py+Math.sin(a)*54])} // 위성은 360/n 간격으로 공전
+    g.fillStyle='#b3202c';for(const m of mobs){const dx=px-m.x,dy=py-m.y,d=Math.hypot(dx,dy)||1;m.x+=dx/d*m.s*dt;m.y+=dy/d*m.s*dt;
+      let dead=d<10;for(const s of S)if((m.x-s[0])**2+(m.y-s[1])**2<150)dead=true;
+      if(dead){sp.add(m.x,m.y,5,'#FF2D3D');spawn(m);pool?reused++:made++} // 풀링: 같은 객체를 다시 씀 / 끔: 새로 만듦
+      g.fillRect(m.x-4,m.y-4,8,8)}
+    sp.draw(g,dt);g.fillStyle='#fff';for(const s of S){g.beginPath();g.arc(s[0],s[1],6,0,6.283);g.fill()}g.fillStyle='#5b8def';g.beginPath();g.arc(px,py,8,0,6.283);g.fill();
+    st.innerHTML=`새로 만든 횟수 <b style="color:${pool?'#4ade80':'#FF2D3D'}">${made.toLocaleString()}</b> · 재사용 <b>${reused.toLocaleString()}</b>`;
+    text(g,'움직여서 피하기 · 누르면 위성 +1',w/2,24,13,'#8A8A92')});
+  return()=>{end();K.off()}}
+
+/* 6. 가상 키보드 — 손가락(커서)을 키 위에 잠깐 올리면 입력 */
+function toyKeys(box,ctl){const k=el('div','kb'),out=el('div','out','');let s='',tm;k.appendChild(out);box.appendChild(k);
+  const type=(b,ch)=>{s=(s+ch).slice(-18);out.textContent=s;b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),160);st.innerHTML=`입력한 글자 <b>${s.length}</b>`};
+  ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM',' '].forEach(r=>{const row=el('div','row');[...r].forEach(ch=>{const b=el('button','key'+(ch===' '?' sp':''),`<span>${ch===' '?'SPACE':ch}</span>`);
+    b.onpointerenter=e=>{if(e.pointerType==='touch')return;b.classList.add('dw');tm=setTimeout(()=>{type(b,ch);b.classList.remove('dw')},380)};
+    b.onpointerleave=()=>{clearTimeout(tm);b.classList.remove('dw')};b.onclick=()=>{clearTimeout(tm);b.classList.remove('dw');type(b,ch)};row.appendChild(b)});k.appendChild(row)});
+  btn(ctl,'지우기',()=>{s='';out.textContent='';st.innerHTML='입력한 글자 <b>0</b>'});const st=stat(ctl);st.innerHTML='입력한 글자 <b>0</b>';return()=>clearTimeout(tm)}
+
+/* ══ 프로젝트 데이터 ══ 만든 순서대로. tech가 같은 프로젝트끼리 지도에서 이어진다 */
+const TECH={pool:'오브젝트 풀링',event:'이벤트 기반 구조',so:'ScriptableObject',fsm:'FSM',bt:'행동 트리',nav:'NavMesh',parry:'패링 · 타이밍'};
+const P=[
+ {id:'vkeyboard',n:'가상 키보드',y:'2025',img:'data/virtualKeyboard_image.jpg',pos:[9,34],tech:[],toy:toyKeys,
+  tt:'손가락 대신 커서로 눌러 보기',td:'키 위에 커서를 잠깐 올려 두면 입력됩니다. 실제로는 웹캠이 손가락 위치를 읽었습니다.',
+  p:'물리 키보드 없이 <b>웹캠만으로 키 입력</b>을 인식하는 웹 애플리케이션.',did:['Python','MediaPipe','YOLO','OpenCV'],
+  lesson:'"화면에 보이는 손가락"과 "실제로 눌린 키"를 맞추는 문제에서 시작했습니다.',next:['palegarden','다음은 Unity로 넘어가 혼자 게임 한 편을 끝까지 만들었습니다.']},
+ {id:'palegarden',n:'Pale Garden',y:'2026 · 1인',img:'assets/pg_card.jpg',pos:[25,68],tech:['pool','fsm','event','so'],toy:toySwarm,
+  tt:'몹 떼와 오브젝트 풀링',td:'몹 수를 늘린 뒤 풀링을 꺼 보세요. 죽을 때마다 새로 만드는 횟수가 계속 올라갑니다.',
+  p:'몹이 몰려오는 <b>2D 생존 액션</b>. 기획부터 빌드까지 혼자 완주했습니다.',did:['오브젝트 풀링','Template Method','FSM','옵저버'],
+  lesson:'"많아져도 안 무너지는 구조"를 처음 고민한 프로젝트입니다.',next:['nyankov','여기서 쓴 풀링과 데이터 주도 설계를 팀 프로젝트의 인벤토리로 가져갔습니다.']},
+ {id:'nyankov',n:'NyanKov',y:'2026.03 · 팀 4인',img:'assets/nk_inv.png',pos:[41,30],tech:['pool','event','so'],toy:toyBag,
+  tt:'가방을 줄이면 아이템은 어디로 가나',td:'아이템을 누르고 다른 칸을 누르면 옮겨집니다. 가방을 작은 것으로 바꿔 보고, 수정 전과 후를 비교하세요.',
+  p:'<b>3D 쿼터뷰 익스트랙션 슈팅</b>. 아이템이 조용히 사라지지 않는 인벤토리를 혼자 설계했습니다.',did:['인벤토리','MVP · Flyweight','제작 트랜잭션','드래그앤드롭'],
+  lesson:'에러 없이 데이터가 사라지는 버그가 가장 무섭다는 것을 배웠습니다.',next:['smartcity','"상태가 조용히 어긋나는 문제"는 여러 기기가 같은 세계를 보는 VR에서 더 커졌습니다.']},
+ {id:'smartcity',n:'SmartCity VR',y:'2026.04 · 팀 4인',img:'assets/vr_card.jpg',pos:[57,68],tech:['pool','event','bt','nav'],toy:toyLate,
+  tt:'늦게 들어온 사람에게도 문이 열려 있나',td:'방장이 문을 연 뒤에 B를 접속시켜 보세요. 그다음 방식을 바꿔서 다시 해 보세요.',
+  p:'여러 명이 같은 역을 보는 <b>VR 지하철 멀티플레이</b>. 월드와 네트워크를 맡았습니다.',did:['Photon 동기화','네트워크 풀링','IK 아바타','NPC 군중'],
+  lesson:'"사건"으로 보냈지만 사실은 "상태"였습니다. 동기화는 하나의 기능이 아니었습니다.',next:['grimoire','여기서 직접 만든 행동 트리를 다음 프로젝트의 보스 AI로 키웠습니다.']},
+ {id:'grimoire',n:'Grimoire',y:'2026.05 · 팀 13인',mark:'G',pos:[73,30],tech:['fsm','bt','event','pool','so','parry'],toy:toyClocks,
+  tt:'보이는 링과 실제 판정이 어긋나는 이유',td:'속도를 2×로 바꾸고 링에 맞춰 눌러 보세요. 그다음 "시계 1개"로 바꿔 다시 해 보세요.',
+  p:'동화 범죄물 세계관의 <b>3D 사이드뷰 보스전 액션</b>. 보스 시스템 전체와 팀 공용 코어를 맡았습니다.',did:['보스 AI','FSM + 행동 트리','패링 판정','EventBus'],
+  lesson:'링과 판정이 서로 다른 시계를 쓰고 있었습니다. 시간의 기준을 애니메이션 하나로 모아 해결했습니다.',next:['cheolmuk','이때 푼 타이밍 문제가 다음 게임의 받아치기 설계가 됐습니다.']},
+ {id:'cheolmuk',n:'철과 묵',y:'2026.10 · 팀 4인',img:'assets/cm_title.jpg',bp:'72% center',pos:[89,64],tech:['parry','nav'],toy:toyParry,
+  tt:'받아치기',td:'줄어드는 원이 흰 과녁에 닿는 순간 누르세요. 성공하면 증기가 차고, 가득 차면 강공격이 나갑니다.',
+  p:'증기통을 멘 무사가 얼어붙은 한양을 지나는 <b>조선 스팀펑크 3인칭 액션</b>. 전투와 적 AI를 맡았습니다.',did:['전투 시스템','적 AI','조준 · VFX','리깅 · 옷 물리'],
+  lesson:'판정 ±0.1초, 성공하면 잠깐 멈추는 히트스탑. 앞선 프로젝트들에서 배운 것을 전투 한 판에 모았습니다.',next:['vkeyboard','처음으로 돌아가기']}
+];
+
+/* ══ 지도 ══ */
+const map=$('#map');let active=null;
+P.forEach((p,k)=>{const b=el('button','node',`<span class="num">${k+1}</span><span class="th"${p.img?` style="background-image:url(${p.img})${p.bp?';background-position:'+p.bp:''}"`:''}>${p.img?'':`<i>${p.mark}</i>`}</span><b>${p.n}</b><span class="m">${p.y}</span>`);
+  b.style.left=p.pos[0]+'%';b.style.top=p.pos[1]+'%';b.setAttribute('aria-label',`${k+1}. ${p.n} 열기`);b.onclick=()=>open(k);map.appendChild(b);p.el=b});
+const used=Object.keys(TECH).filter(t=>P.filter(p=>p.tech.includes(t)).length>1);
+$('#techs').innerHTML='<span class="m">이어진 기술</span>'+used.map(t=>`<button data-t="${t}" aria-pressed="false">${TECH[t]}<small>${P.filter(p=>p.tech.includes(t)).length}</small></button>`).join('');
+$('#techs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;active=active===b.dataset.t?null:b.dataset.t;lines()};
+function lines(){const r=map.getBoundingClientRect(),c=p=>{const q=p.el.querySelector('.th').getBoundingClientRect();return[q.left+q.width/2-r.left,q.top+q.height/2-r.top]};
+  const d=a=>a.map((p,i)=>(i?'L':'M')+c(p).map(v=>v.toFixed(1)).join(' ')).join(' ');
+  $('#chrono').setAttribute('d',d(P));const hot=active?P.filter(p=>p.tech.includes(active)):[];$('#link').setAttribute('d',hot.length>1?d(hot):'');
+  map.classList.toggle('filter',!!active);P.forEach(p=>p.el.classList.toggle('hot',hot.includes(p)));
+  document.querySelectorAll('#techs [data-t]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===active))}
+addEventListener('resize',lines);
+
+/* ══ 프로젝트 열기 ══ */
+let cur=-1,stop=null;
+$('#mini').innerHTML=P.map((p,k)=>`<button data-k="${k}"><kbd>${k+1}</kbd>${p.n}</button>`).join('');
+$('#mini').onclick=e=>{const b=e.target.closest('[data-k]');if(b)open(+b.dataset.k)};
+function open(k){if(stop){stop();stop=null}cur=k;const p=P[k],box=$('#box'),ctl=$('#ctl');box.innerHTML='';ctl.innerHTML='';
+  $('#tt').textContent=p.tt;$('#td').textContent=p.td;
+  const nx=P.find(q=>q.id===p.next[0]);
+  $('#info').innerHTML=`<div class="m"><span class="r">■</span> ${k+1} / ${P.length} · ${p.y}</div><h2>${p.n}</h2><p>${p.p}</p>
+    <div class="chips">${p.did.map(x=>`<span>${x}</span>`).join('')}</div>
+    <p class="lesson">${p.lesson}</p>
+    ${p.tech.length?`<div class="m" style="margin-bottom:8px">다른 프로젝트와 이어진 기술</div><div class="chips">${p.tech.map(t=>`<button data-link="${t}">${TECH[t]} →</button>`).join('')}</div>`:''}
+    <button class="nextp" data-open="${P.indexOf(nx)}"><span class="m r">다음으로 이어짐 →</span><b>${nx.n}</b><span>${p.next[1]}</span></button>
+    <div class="cta"><a class="btn p" href="index.html#${p.id}">자세히 보기 →</a><a class="btn" href="index.html#${p.id}/stages">만든 것 목록</a></div>`;
+  [...$('#mini').children].forEach((b,i)=>b.setAttribute('aria-current',i===k));
+  document.body.classList.add('in');history.replaceState(null,'','#'+p.id);
+  const mine=k;requestAnimationFrame(()=>{if(cur===mine&&!stop)stop=p.toy(box,ctl)})} // 화면이 자리를 잡은 뒤 놀이 시작
+function home(t){if(stop){stop();stop=null}cur=-1;document.body.classList.remove('in');history.replaceState(null,'',location.pathname);if(t!==undefined)active=t;requestAnimationFrame(lines)}
+$('#back').onclick=()=>home();
+$('#info').onclick=e=>{const o=e.target.closest('[data-open]'),l=e.target.closest('[data-link]');if(o)open(+o.dataset.open);else if(l)home(l.dataset.link)}; // 기술을 누르면 지도에서 그 연결을 보여 줌
+addEventListener('keydown',e=>{if(e.key==='Escape'&&cur>=0)home();
+  const n=+e.key;if(e.key!==' '&&n>=1&&n<=P.length&&!e.ctrlKey&&!e.metaKey&&!e.altKey)open(n-1);
+  if(cur>=0&&e.key==='ArrowRight')open((cur+1)%P.length);if(cur>=0&&e.key==='ArrowLeft')open((cur+P.length-1)%P.length)});
+
+/* ══ 배경: 떠오르는 불씨 ══ */
+if(!RM){const c=$('#bgc'),g=c.getContext('2d');let W,H;const fit=()=>{W=c.width=innerWidth;H=c.height=innerHeight};fit();addEventListener('resize',fit);
+  const E=Array.from({length:60},()=>({x:Math.random(),y:Math.random(),r:.6+Math.random()*1.8,s:.0004+Math.random()*.0012,w:Math.random()*6.28}));
+  (function f(t){requestAnimationFrame(f);g.clearRect(0,0,W,H);for(const p of E){p.y-=p.s;if(p.y<-.02){p.y=1.02;p.x=Math.random()}
+    g.globalAlpha=.15+.4*Math.abs(Math.sin(t/800+p.w));g.fillStyle='#FF2D3D';g.beginPath();g.arc((p.x+Math.sin(t/1200+p.w)*.01)*W,p.y*H,p.r,0,6.28);g.fill()}})(0)}
+
+/* ══ 시작 ══ */
+lines();setTimeout(lines,400);
+{const k=P.findIndex(p=>p.id===location.hash.slice(1));if(k>=0)open(k)}
+</script>
+</body>
+</html>

@@ -1,0 +1,1703 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081019">
+  <meta name="description" content="게임 클라이언트 개발자 윤평화의 포트폴리오. 철과 묵의 한옥 포탈을 지나 여섯 프로젝트의 작업과 구현 과정을 살펴보세요.">
+  <title>윤평화 · 게임 클라이언트 개발 포트폴리오</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="assets/project-map.css">
+  <script src="assets/project-map.js" defer></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --base: #081019;
+      --ink: #f1f5f8;
+      --quiet: #c0ccd8;
+      --ice: #acecfc;
+      --pad: clamp(16px, 6vw, 104px);
+      --serif: "Nanum Myeongjo", Batang, serif;
+      --sans: Pretendard, "Malgun Gothic", sans-serif;
+      --nav: 60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--base); color: var(--ink); font: 1rem/1.64 var(--sans); word-break: keep-all; }
+    h1, h2, h3, p, figure { margin: 0; }
+    a { color: inherit; text-underline-offset: .28em; }
+    a:hover { color: var(--ice); }
+    button, summary { color: inherit; font: inherit; }
+    :focus-visible { outline: 2px solid var(--ice); outline-offset: 5px; }
+    [id] { scroll-margin-top: calc(var(--nav) + 12px); }
+    img { display: block; max-width: 100%; }
+    .wrap { width: min(100% - 2 * var(--pad), 1370px); margin-inline: auto; }
+    .skip { position: fixed; z-index: 8; top: 8px; left: var(--pad); padding: 9px 14px; color: var(--base); background: var(--ink); clip-path: inset(50%); }
+    .skip:focus { clip-path: none; }
+    .topbar { position: fixed; z-index: 5; top: 0; inset-inline: 0; background: #070e18e8; border-bottom: 1px solid #d0e7ff25; }
+    .nav, .nav nav { display: flex; align-items: center; gap: clamp(10px, 2.9vw, 36px); }
+    .nav { min-height: var(--nav); justify-content: space-between; }
+    .nav a, .nav summary, .motion { min-height: 44px; display: inline-flex; align-items: center; font-weight: 670; text-decoration: none; white-space: nowrap; }
+    .brand { font-family: var(--serif); font-size: 1.08rem; }
+    .nav details { position: relative; }
+    .nav summary { list-style: none; cursor: pointer; gap: .4em; }
+    .nav summary::-webkit-details-marker { display: none; }
+    .nav summary::after { content: ""; width: .46em; height: .46em; margin: -.25em .15em 0; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
+    .menu { position: absolute; top: 100%; right: 0; display: grid; width: max-content; max-width: calc(100vw - 2 * var(--pad)); padding: 5px; border: 1px solid #8cb3ce55; background: #111b27; }
+    .menu a { padding-inline: .85em; }
+    .menu a:hover, .menu a[aria-current="location"] { background: #24374a; color: var(--ice); }
+    .motion { display: none; border: 0; padding: 0; background: none; cursor: pointer; }
+    .motion svg { margin-right: .45em; }
+    .story-ready .motion { display: inline-flex; }
+    .motion[aria-pressed="true"] { color: var(--ice); }
+
+    .sequence { position: relative; }
+    .view { display: none; }
+    .hero { position: relative; background: #182b43; isolation: isolate; }
+    .hero-shot { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; object-position: 56% center; z-index: -2; }
+    .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #060d18ee, #060d189d 29%, transparent 70%), linear-gradient(0deg, #081019e8, transparent 26%); z-index: -1; }
+    .hero-inner { min-height: 100svh; display: grid; align-content: center; padding-block: calc(var(--nav) + 35px) 90px; }
+    .hero-copy { max-width: 35ch; }
+    .role { color: var(--ice); font-weight: 740; }
+    h1 { margin-block: .11em .19em; font: 800 clamp(4.3rem, 9.2vw, 9.6rem)/1 var(--serif); letter-spacing: -.095em; white-space: nowrap; }
+    .lead { max-width: 28ch; color: var(--quiet); font-size: clamp(1rem, 1.44vw, 1.22rem); }
+    .enter { display: inline-flex; min-height: 46px; align-items: center; gap: 1rem; margin-top: 1.45rem; padding: 7px 15px; text-decoration: none; font-weight: 740; color: #e3f9ff; background: #112b3b; border: 1px solid #82c6db; }
+    .enter:hover { background: #d7f4fe; color: #08141b; }
+    .hero-caption { position: absolute; right: var(--pad); bottom: 28px; text-align: right; color: var(--quiet); font-size: .86rem; }
+    .cue { display: none; }
+    .chapter { --accent: var(--ice); padding-block: clamp(37px, 7vw, 90px); border-bottom: 1px solid #a8bed526; }
+    .chapter[data-scene="steam"] { --accent: #ffd498; }
+    .chapter[data-scene="nyankov"] { --accent: #f3cc91; }
+    .chapter[data-scene="grimoire"] { --accent: #e9c6ff; }
+    .chapter[data-scene="palegarden"] { --accent: #d3efa3; }
+    .chapter[data-scene="keyboard"] { --accent: #d9efa1; }
+    .beat { margin-inline: auto; }
+    .copy { min-width: 0; max-width: 48ch; }
+    .eyebrow { margin-bottom: .55rem; color: var(--accent); font-size: .86rem; font-weight: 750; }
+    .chapter h2 { font: 800 clamp(2.55rem, 5.4vw, 5.3rem)/1.05 var(--serif); letter-spacing: -.069em; text-wrap: balance; }
+    .chapter h3 { margin-bottom: .54em; font: 800 clamp(1.65rem, 3.3vw, 3.05rem)/1.17 var(--serif); letter-spacing: -.048em; text-wrap: balance; }
+    .intro p:not(.eyebrow) { margin-top: 1em; }
+    .credit, .build p:not(.eyebrow), figcaption { color: var(--quiet); }
+    .credit b { color: var(--ink); margin-right: .5em; }
+    code { color: var(--accent); font: .88em/1.3 Consolas, monospace; overflow-wrap: anywhere; }
+    .proof { display: flex; flex-wrap: wrap; gap: 0 1rem; margin-top: .85em; }
+    .proof a { display: inline-flex; align-items: center; min-height: 44px; font-size: .92rem; font-weight: 720; }
+    .evidence { margin-block: 26px 32px; }
+    .evidence img, .state-figure { width: min(100%, 720px); max-height: 55svh; object-fit: contain; object-position: left center; }
+    .state-figure { min-height: 175px; display: grid; align-content: center; justify-content: center; background: #261b34; color: var(--accent); font-size: clamp(1.05rem, 3vw, 1.7rem); font-weight: 700; }
+    figcaption { padding-block: .4em 0; font-size: .84rem; }
+    .footer { position: relative; z-index: 1; min-height: 38svh; display: grid; align-content: center; padding-block: 52px; background: var(--base); }
+    .footer h2 { font: 800 clamp(2.1rem, 4vw, 3.6rem)/1.1 var(--serif); letter-spacing: -.06em; }
+    .footer p { color: var(--quiet); margin-top: .5em; }
+
+    .story-ready .sequence { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .story-ready .view, .story-ready .track { grid-area: 1 / 1; }
+    .story-ready .view { display: block; position: sticky; top: 0; align-self: start; height: 100svh; isolation: isolate; overflow: hidden; }
+    .view canvas, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .shade { pointer-events: none; background: linear-gradient(90deg, #050912ec, #050912ad 23%, #05091240 43%, transparent 63%), linear-gradient(0deg, #070d17d9, transparent 21%); }
+    .scene-note { position: absolute; right: var(--pad); bottom: 24px; color: #e1edf8; font-size: .8rem; letter-spacing: .01em; text-shadow: 0 1px 7px #000; pointer-events: none; }
+    .story-ready .track { z-index: 1; min-width: 0; pointer-events: none; }
+    .story-ready .track .copy, .story-ready .track .hero-copy { pointer-events: auto; }
+    .story-ready .hero { min-height: 174svh; background: transparent; }
+    .story-ready .hero::after, .story-ready .hero-shot, .story-ready .hero-caption, .story-ready .evidence { display: none; }
+    .story-ready .cue { display: block; position: absolute; left: var(--pad); bottom: calc(74svh + 24px); color: var(--quiet); font-size: .84rem; }
+    .cue span { color: var(--ice); padding-right: .35em; }
+    .story-ready .chapter { padding: 0; border: 0; }
+    .story-ready .beat { display: grid; align-content: center; min-height: 83svh; padding-block: calc(var(--nav) + 12px) 43px; }
+    .story-ready .copy { width: min(100%, 35vw, 510px); text-shadow: 0 1px 16px #000a; }
+    .story-ready .copy:focus-within { opacity: 1; }
+
+    @media (max-width: 760px) {
+      :root { --nav: 54px; }
+      .nav { font-size: .91rem; }
+      .motion { min-width: 44px; justify-content: center; }
+      .motion svg { margin: 0; }
+      .motion span { position: absolute; clip-path: inset(50%); white-space: nowrap; }
+      .hero-inner { align-content: start; padding-block: calc(var(--nav) + 32px) 20px; }
+      h1 { font-size: clamp(3.6rem, 16vw, 6rem); }
+      .hero::after { background: linear-gradient(180deg, #060d18f5, #060d1869 37%, transparent 58%, #060d18b8); }
+      .hero-shot { top: 35svh; height: 57svh; object-position: 50% center; }
+      .hero-caption, .scene-note { right: var(--pad); bottom: 13px; max-width: 85%; text-align: right; font-size: .73rem; }
+      .shade { background: linear-gradient(180deg, #060e1e89, transparent 29%, transparent 46%, #050a14b5 69%, #060b14f2); }
+      .view[data-scene="portal"] .shade { background: linear-gradient(180deg, #08122299, transparent 36%, transparent 77%, #071019e8); }
+      .story-ready .cue { bottom: calc(74svh + 36px); }
+      .story-ready .beat { min-height: 91svh; align-content: end; padding-block: 45svh 52px; }
+      .story-ready .copy { width: min(100%, 46ch); }
+      .chapter h2 { font-size: clamp(2.35rem, 11vw, 4.4rem); }
+      .chapter h3 { font-size: clamp(1.55rem, 6.2vw, 2.7rem); }
+    }
+    @media (max-height: 620px) and (max-width: 760px) {
+      .hero-inner { padding-top: calc(var(--nav) + 12px); }
+      .hero-copy .lead { font-size: .9rem; }
+      .enter { margin-top: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    @supports (animation-timeline: view()) {
+      .story-ready .beat .copy {
+        animation: arrive linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 83%;
+      }
+      .story-ready .copy:focus-within { animation: none; }
+      @keyframes arrive {
+        from { opacity: .48; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body id="top">
+  <a class="skip" href="#works">프로젝트로 바로가기</a>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top">윤평화</a>
+      <nav aria-label="주 메뉴">
+        <details id="project-menu">
+          <summary>프로젝트</summary>
+          <div class="menu">
+            <a href="#works" data-open-map>탐험 지도</a>
+            <a href="#works">철과 묵</a>
+            <a href="#smartcity">SmartCity VR</a>
+            <a href="#nyankov">NyanKov</a>
+            <a href="#grimoire">Grimoire</a>
+            <a href="#palegarden">Pale Garden</a>
+            <a href="#keyboard">웹캠 기반 가상 키보드</a>
+          </div>
+        </details>
+        <a href="#contact">연락처</a>
+        <button class="motion" type="button" aria-pressed="false">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="currentColor"><rect x="3" y="2" width="3" height="11" rx="1"/><rect x="9" y="2" width="3" height="11" rx="1"/></svg>
+          <span>모션 정지</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="sequence" id="journey">
+      <div class="view" aria-hidden="true">
+        <canvas id="gate-canvas"></canvas>
+        <div class="shade"></div>
+        <p class="scene-note"></p>
+      </div>
+      <div class="track">
+        <section class="hero" data-scene="portal" aria-labelledby="title">
+          <img class="hero-shot" src="assets/s_portal.jpg" alt="청백색 소용돌이와 안개가 흐르는 한옥 포탈" width="1280" height="597" fetchpriority="high">
+          <div class="wrap hero-inner">
+            <div class="hero-copy">
+              <p class="role">게임 클라이언트 개발자</p>
+              <h1 id="title">윤평화</h1>
+              <p class="lead">Unity에서 전투와 적 AI, 여러 사람이 함께 보는 게임 세계를 만듭니다.</p>
+              <a class="enter" href="#works" data-open-map>포탈 들어가기 <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+          <p class="hero-caption">철과 묵 · Unity 포탈 VFX 화면</p>
+          <p class="cue"><span aria-hidden="true">↓</span> 스크롤로 포탈 통과</p>
+        </section>
+
+        <article class="chapter" tabindex="-1" id="works" data-scene="steam" data-map-point="18 32"
+          data-map-cover="assets/cm_title.jpg" data-play="cheolmuk" aria-labelledby="steam-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">팀 프로젝트 · 3인칭 액션</p>
+              <h2 id="steam-title">철과 묵</h2>
+              <p>1887년, 증기를 동력으로 쓰는 가상의 조선. 무사가 칼과 화승총으로 싸우며 깨어난 현무를 잠재우러 갑니다.</p>
+              <p class="credit"><b>내 역할</b>전투 시스템, 적 AI, 포탈 효과, 캐릭터와 소품의 Unity 적용</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <img src="assets/steam.png" alt="붉은 증기를 내뿜는 스팀백과 압력 바늘" width="800" height="1000" loading="lazy">
+            <figcaption>Unity 화면 · 스팀백의 압력과 배출 효과</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">전투 자원 설계</p>
+              <h3>칼로 모은 증기를 화승총에 쓴다</h3>
+              <p><code>SteamHitRefill</code>은 칼의 일반 공격이 적중하면 <code>SteamTank</code>에 증기를 채웁니다. 화승총, 강공격, 시간 역행은 같은 값을 소모합니다. 스팀백의 수위와 압력 바늘도 그 값을 읽고, 가득 차면 붉은 증기가 나옵니다.</p>
+              <div class="proof">
+                <a href="index.html#cheolmuk/stages/6">포탈 VFX 구현 ↗</a>
+                <a href="ink-and-steam.html#steam-build">증기 시스템 구현 ↗</a>
+                <a href="assets/portal.mp4">Unity 포탈 영상 ↗</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chapter" tabindex="-1" id="smartcity" data-scene="smartcity" data-map-point="50 24" aria-labelledby="smartcity-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">팀 프로젝트 · VR 멀티플레이</p>
+              <h2 id="smartcity-title">SmartCity VR</h2>
+              <p>여러 사람이 VR 지하철역에 모여 같은 열차를 기다리고 탑승합니다.</p>
+              <p class="credit"><b>내 역할</b>열차 운행, 문 상태 동기화, NPC 군중과 아바타</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <img src="assets/vr_doorB.jpg" alt="VR 승강장에 열차가 정차한 팀 제작 화면" loading="lazy">
+            <figcaption>팀 제작 화면 · 열차 탑승</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">멀티플레이 상태 동기화</p>
+              <h3>늦게 접속해도 같은 문 상태를 본다</h3>
+              <p>문 열림, 탑승 가능 여부, 승객 수를 Photon의 <code>Room CustomProperties</code>에 저장했습니다. 새 참가자는 <code>OnJoinedRoom</code>에서 현재 값을 읽습니다. 기존 참가자와 같은 갱신 코드로 문 상태를 맞춥니다.</p>
+              <div class="proof">
+                <a href="ink-and-steam.html#smartcity">동기화 구현 ↗</a>
+                <a href="assets/vr_doorB.mp4">팀 제작 영상 ↗</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chapter" tabindex="-1" id="nyankov" data-scene="nyankov" data-map-point="82 34" aria-labelledby="nyankov-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">팀 프로젝트 · 탈출 슈팅</p>
+              <h2 id="nyankov-title">NyanKov</h2>
+              <p>필드에서 장비와 재료를 모아 탈출하고, 가져온 물건으로 다음 출격을 준비합니다.</p>
+              <p class="credit"><b>내 역할</b>인벤토리 데이터, 아이템 이동, 제작과 수리</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <img src="assets/nk_drag.jpg" alt="아이템을 가방과 장비 칸 사이에서 옮기는 게임 화면" width="1280" height="800" loading="lazy">
+            <figcaption>팀 제작 화면 · 인벤토리</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">장면 전환과 데이터 수명</p>
+              <h3>다른 맵에 가도 장비가 남는다</h3>
+              <p><code>DontDestroyOnLoad</code>로 유지하는 <code>GameDataManager</code>가 인벤토리 모델 다섯 개와 시작 장비 지급 여부를 보관합니다. 새 장면의 UI는 Presenter를 통해 기존 <code>InventoryModel</code>의 용량과 내용물을 표시합니다.</p>
+              <div class="proof">
+                <a href="ink-and-steam.html#nyankov">인벤토리 구현 ↗</a>
+                <a href="assets/nk_drag.mp4">팀 제작 영상 ↗</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chapter" tabindex="-1" id="grimoire" data-scene="grimoire" data-map-point="18 68" aria-labelledby="grimoire-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">팀 프로젝트 · 3D 사이드뷰 보스전</p>
+              <h2 id="grimoire-title">Grimoire</h2>
+              <p>동화 속 인물들이 보스로 등장합니다. 공격 예고를 보고 피하거나 타이밍에 맞춰 받아칩니다.</p>
+              <p class="credit"><b>내 역할</b>보스 AI, 공격 패턴, 패링과 시간 연출, 팀 공용 모듈</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <div class="state-figure">신데렐라의 세 공격을 패링 → 경직</div>
+            <figcaption>궁극기를 취소하는 조건</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">보스 AI와 패링</p>
+              <h3>세 번 받아치면 궁극기가 끊긴다</h3>
+              <p>상태 머신이 공격, 궁극기, 경직을 관리하고 행동 트리가 각 패턴을 실행합니다. <code>StatefulSequence</code>는 진행 중인 타격의 인덱스를 보관합니다. 세 타격이 모두 패링되면 궁극기를 중단하고 <code>Groggy</code>로 전환합니다.</p>
+              <div class="proof"><a href="index.html#grimoire/stages/1">보스 AI 구현 코드 ↗</a>
+                <a href="https://github.com/peace03/Wongiok_Project/blob/29fdf5c3ef9886613d0f5b789b51a5106bc9304b/Assets/04_Level/Prefabs/Dev/Boss/CinderellaBoss.prefab">원본 보스 프리팹 ↗</a></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chapter" tabindex="-1" id="palegarden" data-scene="palegarden" data-map-point="50 62" aria-labelledby="palegarden-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">1인 개발 · 2D 생존 액션</p>
+              <h2 id="palegarden-title">Pale Garden</h2>
+              <p>몰려오는 몬스터를 처치하고 경험치를 모아, 능력을 키우며 오래 살아남는 게임입니다.</p>
+              <p class="credit"><b>내 역할</b>기획, 전투, UI, 빌드</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <img src="assets/pg_swarm.jpg" alt="몬스터 무리와 투사체가 등장하는 Pale Garden 전투" width="1280" height="720" loading="lazy">
+            <figcaption>1인 제작 화면 · 몬스터 무리와 전투</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">오브젝트 풀링</p>
+              <h3>쓰러진 몬스터를 다음 무리에 재사용</h3>
+              <p><code>Dictionary&lt;MobType, IObjectPool&gt;</code>에서 몬스터 종류별 풀을 찾습니다. 몬스터가 생성될 때 받은 풀 참조로 스스로 반납합니다. 경험치와 투사체도 같은 방식으로 재사용합니다.</p>
+              <div class="proof">
+                <a href="index.html#palegarden/stages/1">풀링 구현 ↗</a>
+                <a href="assets/pg_swarm.jpg">실제 전투 화면 ↗</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chapter" tabindex="-1" id="keyboard" data-scene="keyboard" data-map-point="82 69"
+          data-map-name="가상 키보드" data-play="vkeyboard" aria-labelledby="keyboard-title">
+          <div class="beat intro wrap">
+            <div class="copy">
+              <p class="eyebrow">팀 프로젝트 · 컴퓨터 비전</p>
+              <h2 id="keyboard-title">웹캠 기반<br>가상 키보드</h2>
+              <p>웹캠 앞에 종이 키보드를 놓고 손가락으로 누르면 글자가 입력됩니다.</p>
+              <p class="credit"><b>내 역할</b>키보드 인식 및 동작 감지 알고리즘 설계</p>
+            </div>
+          </div>
+          <figure class="evidence wrap">
+            <img src="data/virtualKeyboard_image.jpg" alt="카메라가 종이 키보드의 네 모서리와 손가락을 추적한 화면" loading="lazy">
+            <figcaption>팀 제작 화면 · 종이 키보드 입력</figcaption>
+          </figure>
+          <div class="beat build wrap">
+            <div class="copy">
+              <p class="eyebrow">좌표 보정과 터치 판정</p>
+              <h3>비스듬히 찍힌 손가락을 키에 맞춘다</h3>
+              <p>네 모서리 마커로 보정 행렬을 구합니다. <code>cv2.perspectiveTransform</code>으로 손가락 위치를 키보드 평면에 옮기고 키 영역을 찾습니다. 터치 점수가 0.5를 넘고 키 위에 0.1초 이상 머물면 입력합니다.</p>
+              <div class="proof">
+                <a href="ink-and-steam.html#keyboard">판정 구현 ↗</a>
+                <a href="https://github.com/gasujina-prog/virtual-keyboard-project/blob/77d8e7b759edc5cf5b5c957d33f046547e5a3634/services/web_converged.py#L223">프로젝트 코드 ↗</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <dialog class="project-map" id="explore" aria-labelledby="map-title">
+    <header class="map-header">
+      <div>
+        <h2 id="map-title">탐험 지도</h2>
+        <p class="map-instructions">
+          <span class="map-keys">방향키·WASD로 이동하거나 </span>지도에서 지점을 선택하세요.
+        </p>
+      </div>
+      <button class="map-close" type="button" aria-label="탐험 지도 닫기">×</button>
+    </header>
+    <div class="map-layout">
+      <div class="map-world" role="group" aria-label="프로젝트 지점">
+        <canvas aria-hidden="true"></canvas>
+        <div class="map-marker" aria-hidden="true"></div>
+        <p class="map-progress" role="status"></p>
+      </div>
+      <section class="map-detail" aria-labelledby="map-project">
+        <figure class="map-preview">
+          <div class="map-picture"></div>
+          <figcaption></figcaption>
+        </figure>
+        <div class="map-copy" aria-live="polite">
+          <h3 id="map-project"></h3>
+          <p class="map-story"></p>
+          <p class="credit map-credit"></p>
+        </div>
+        <div class="map-actions">
+          <a class="map-record" href="#works">작업 기록 <span aria-hidden="true">→</span></a>
+          <a class="map-play" href="play.html#cheolmuk">기술 체험 <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <footer class="footer" id="contact">
+    <div class="wrap">
+      <h2>연락처</h2>
+      <p>윤평화 · 게임 클라이언트 개발자</p>
+      <div class="proof">
+        <a href="mailto:yph2003go@naver.com">이메일 ↗</a>
+        <a href="https://github.com/peace03">GitHub ↗</a>
+        <a href="https://sedatus.tistory.com">개발 블로그 ↗</a>
+        <a href="assets/gate-scenes/NOTICE.txt">리소스 출처 ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script type="module">
+
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const { clamp, lerp } = THREE.MathUtils;
+const smooth = (from, to, value) => THREE.MathUtils.smoothstep(value, from, to);
+const TAU = Math.PI * 2;
+const cube = new THREE.BoxGeometry(1, 1, 1);
+const cylinder = new THREE.CylinderGeometry(1, 1, 1, 28);
+const stone = new THREE.DodecahedronGeometry(1, 0);
+const orb = new THREE.SphereGeometry(1, 16, 12);
+const quad = new THREE.PlaneGeometry(1, 1);
+const vertexUV = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const outputColor = `
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+`;
+
+function seeded(index) {
+  const value = Math.sin(index * 127.1 + 311.7) * 43758.5453123;
+  return value - Math.floor(value);
+}
+function surface(color, metalness = 0, roughness = .72) {
+  return new THREE.MeshStandardMaterial({ color, metalness, roughness });
+}
+function luminous(color) {
+  return new THREE.MeshBasicMaterial({ color });
+}
+function mesh(parent, geometry, material, x, y, z) {
+  const object = new THREE.Mesh(geometry, material);
+  object.position.set(x, y, z);
+  parent.add(object);
+  return object;
+}
+function box(parent, material, x, y, z, width, height, depth) {
+  const object = mesh(parent, cube, material, x, y, z);
+  object.scale.set(width, height, depth);
+  return object;
+}
+function drum(parent, material, x, y, z, radius, height) {
+  const object = mesh(parent, cylinder, material, x, y, z);
+  object.scale.set(radius, height, radius);
+  return object;
+}
+function ring(parent, material, x, y, z, radius, thickness = .02) {
+  return mesh(parent, new THREE.TorusGeometry(radius, thickness, 6, 64), material, x, y, z);
+}
+function line(parent, material, points, closed = false) {
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const object = closed ? new THREE.LineLoop(geometry, material) : new THREE.Line(geometry, material);
+  parent.add(object);
+  return object;
+}
+function group(parent, x = 0, y = 0, z = 0) {
+  const object = new THREE.Group();
+  object.position.set(x, y, z);
+  parent.add(object);
+  return object;
+}
+function directional(scene, color, intensity, x, y, z) {
+  const light = new THREE.DirectionalLight(color, intensity);
+  light.position.set(x, y, z);
+  scene.add(light);
+}
+function world(night, haze, key, rim, density = .035) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(haze);
+  scene.fog = new THREE.FogExp2(haze, density);
+  scene.add(new THREE.HemisphereLight(key, night, 1.35));
+  directional(scene, key, 2.45, 4, 8, 6);
+  directional(scene, rim, 2.45, -5, 5, -5);
+  return scene;
+}
+function frameCamera(camera, first, last, subject, progress, arc = 0) {
+  const phase = smooth(0, 1, progress);
+  camera.position.set(
+    lerp(first[0], last[0], phase) + Math.sin(phase * Math.PI) * arc,
+    lerp(first[1], last[1], phase),
+    lerp(first[2], last[2], phase)
+  );
+  camera.lookAt(...subject);
+}
+function fitModel(model, parent, height, x, y, z) {
+  const bounds = new THREE.Box3().setFromObject(model);
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  const scale = height / size.y;
+  const pivot = group(parent, x, y, z);
+  model.scale.multiplyScalar(scale);
+  model.position.sub(center.multiplyScalar(scale));
+  model.position.y += height / 2;
+  pivot.add(model);
+  return pivot;
+}
+
+function imageTexture(width, height, draw) {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  draw(canvas.getContext("2d"));
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+const cloudTexture = imageTexture(96, 96, ctx => {
+  const pixels = ctx.createImageData(96, 96);
+  for (let y = 0; y < 96; y++) {
+    for (let x = 0; x < 96; x++) {
+      const radial = 1 - Math.hypot((x - 47.5) / 48, (y - 47.5) / 48);
+      const curl = .61 + .14 * Math.sin(x * .26 + y * .18)
+        + .12 * Math.cos(x * .13 - y * .33) + .12 * Math.sin(y * .59 + x * .46);
+      const pixel = (y * 96 + x) * 4;
+      pixels.data[pixel] = pixels.data[pixel + 1] = pixels.data[pixel + 2] = 255;
+      pixels.data[pixel + 3] = Math.round(Math.max(0, radial) ** 1.5 * curl * 255);
+    }
+  }
+  ctx.putImageData(pixels, 0, 0);
+});
+function vapor(parent, color) {
+  const object = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: cloudTexture, color, transparent: true, depthWrite: false, fog: false
+  }));
+  parent.add(object);
+  return object;
+}
+function floorGlow(parent, color, x, y, z, width, depth, opacity) {
+  const object = mesh(parent, quad, new THREE.MeshBasicMaterial({
+    map: cloudTexture, color, transparent: true, opacity, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1
+  }), x, y, z);
+  object.rotation.x = -Math.PI / 2;
+  object.scale.set(width, depth, 1);
+  return object;
+}
+function floor(scene, color, height = -.08) {
+  const object = mesh(scene, quad, surface(color), 0, height, 0);
+  object.scale.set(130, 130, 1);
+  object.rotation.x = -Math.PI / 2;
+  return object;
+}
+
+function portalScene({ models, meshes, images }) {
+  const scene = world(0x172941, 0x253c55, 0xbcd7ff, 0x8ebdf3, .023);
+  const worldVertex = `
+      varying vec3 worldPosition;
+      void main() {
+        worldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+  const nightSky = `
+    vec3 skyColor(vec3 d) {
+      float horizon = exp(-abs(d.y + .06) * 3.7);
+      float glow = exp(-length(d - normalize(vec3(.28,.12,-1.0))) * 2.0);
+      return mix(vec3(.012,.027,.059), vec3(.035,.071,.127), horizon) + glow * vec3(.016,.025,.031);
+    }
+  `;
+  const sky = mesh(scene, new THREE.SphereGeometry(83, 24, 16), new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    depthWrite: false,
+    vertexShader: worldVertex,
+    fragmentShader: `
+      varying vec3 worldPosition;
+      ${nightSky}
+      void main() {
+        vec3 d = normalize(worldPosition - cameraPosition);
+        gl_FragColor = vec4(skyColor(d), 1.0);
+        ${outputColor}
+      }
+    `
+  }), 0, 0, 0);
+  sky.renderOrder = -10;
+  const clearing = mesh(scene, quad, new THREE.ShaderMaterial({
+    vertexShader: worldVertex,
+    fragmentShader: `
+      varying vec3 worldPosition;
+      ${nightSky}
+      void main() {
+        vec3 d = normalize(worldPosition - cameraPosition);
+        float distanceToCamera = length(worldPosition - cameraPosition);
+        vec2 p = worldPosition.xz;
+        float grain = sin(p.x * 21.0 + cos(p.y * 27.0)) * sin(p.y * 23.0 - p.x * 7.0);
+        float ripples = sin(p.x * 3.15 + p.y * 1.24 + sin(p.y * 2.4)) * sin(p.y * 1.8);
+        float textureWeight = 1.0 - smoothstep(8.0, 26.0, distanceToCamera);
+        float pool = exp(-length(vec2(p.x * .82, (p.y - .9) * .48)) * .71);
+        vec3 rock = vec3(.023,.049,.095) + (grain * .005 + ripples * .004) * textureWeight;
+        rock += vec3(.039,.10,.153) * pool;
+        vec3 color = mix(rock, skyColor(d), smoothstep(10.0, 48.0, distanceToCamera));
+        gl_FragColor = vec4(color, 1.0);
+        ${outputColor}
+      }
+    `
+  }), 0, -.08, 0);
+  clearing.rotation.x = -Math.PI / 2;
+  clearing.scale.set(230, 230, 1);
+  floorGlow(scene, 0x091426, .4, -.075, -.12, 9.5, 5.2, .85);
+  floorGlow(scene, 0x7fdaff, 0, -.071, .67, 5.2, 5, .78);
+
+  const rocks = new THREE.InstancedMesh(orb, surface(0x2a425c, .2, .48), 80);
+  const pose = new THREE.Object3D();
+  for (let i = 0; i < rocks.count; i++) {
+    const x = (seeded(i * 4) - .5) * 23;
+    const z = (seeded(i * 4 + 1) - .36) * 25;
+    const radius = .07 + seeded(i * 4 + 2) ** 1.8 * .4;
+    pose.position.set(x, -.045, z);
+    pose.scale.set(radius, radius * .35, radius * .76);
+    pose.rotation.y = seeded(i * 4 + 3) * TAU;
+    pose.updateMatrix();
+    rocks.setMatrixAt(i, pose.matrix);
+  }
+  scene.add(rocks);
+  fitModel(models.door, scene, 4.95, 0, 0, 0);
+  const noise = imageMap(images.noise);
+  noise.colorSpace = THREE.NoColorSpace;
+  noise.wrapS = noise.wrapT = THREE.RepeatWrapping;
+
+  const uniforms = {
+    uTime: { value: 0 },
+    uEnergy: { value: 0 },
+    uNoise: { value: noise },
+    uCursor: { value: new THREE.Vector2(.5, .5) }
+  };
+  const veil = mesh(scene, quad, new THREE.ShaderMaterial({
+    uniforms,
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    vertexShader: vertexUV,
+    fragmentShader: `
+      uniform float uTime;
+      uniform float uEnergy;
+      uniform sampler2D uNoise;
+      uniform vec2 uCursor;
+      varying vec2 vUv;
+      void main() {
+        vec2 p = (vUv - vec2(.50,.51)) * vec2(1.16,1.0);
+        p.x += sin(p.y * 13.0 + uTime * .64) * .036;
+        float r = length(p);
+        float a = atan(p.y, p.x);
+        float density = texture2D(uNoise, vUv * 1.34 + vec2(.032,-.027) * uTime).r;
+        float warp = sin(r * 19.0 - uTime * 1.45 + sin(a * 2.0 + uTime * .4)) * .67 + (density - .5) * 1.35;
+        float spiral = sin(a * 2.0 + r * 27.0 + warp - uTime * 1.65) * .5 + .5;
+        float wisps = sin(a * 3.0 + r * 48.0 - uTime * 2.1 + warp * 2.0) * .5 + .5;
+        float curl = exp(-abs(r - .29 + sin(a * 3.0 - uTime * .55) * .056) * 11.8);
+        float stream = (pow(spiral, 4.0) * .78 + pow(wisps, 8.0) * .15) * curl;
+        float frost = exp(-pow((vUv.y - .06) * 7.0, 2.0)) * (.38 + .28 * spiral + .46 * density);
+        float frame = exp(-abs(r - .41) * 16.0) * (.36 + wisps * .28);
+        float cursor = exp(-length(vUv - uCursor) * 9.0) * uEnergy * .35;
+        float light = stream + frame + frost + cursor;
+        vec2 border = min(vUv, 1.0 - vUv);
+        float edge = smoothstep(0.0,.12,border.x) * smoothstep(0.0,.105,border.y);
+        vec3 lightColor = mix(vec3(.11,.36,.48),vec3(.72,1.24,1.48), smoothstep(.0,.92,light));
+        gl_FragColor = vec4(vec3(.006,.021,.039) + lightColor * light * (1.0 + uEnergy * .36), edge * (.79 + light * .19));
+        ${outputColor}
+      }
+    `
+  }), 0, 1.63, .30);
+  veil.scale.set(2.80, 3.18, 1);
+
+  const runeMaterial = new THREE.MeshBasicMaterial({
+    color: 0xb6eafa, transparent: true, opacity: .75, depthWrite: false,
+    side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+  });
+  const runes = mesh(scene, meshes.runes, runeMaterial, 0, .016, .916);
+  runes.scale.set(5.78, 6.08, 5.9);
+  runes.renderOrder = 3;
+  const filamentMaterial = runeMaterial.clone();
+  filamentMaterial.opacity = .46;
+  const filaments = mesh(scene, meshes.filaments, filamentMaterial, 0, .036, -.31);
+  filaments.scale.set(5.50, 5.94, 3.39);
+  filaments.renderOrder = 4;
+  const mist = Array.from({ length: 18 }, () => vapor(scene, 0xb7efff));
+  const light = new THREE.PointLight(0xa7e4ff, 39, 9, 2);
+  light.position.set(.02, 1.29, 1.12);
+  scene.add(light);
+
+  const positions = [];
+  for (let i = 0; i < 540; i++) {
+    const spread = i < 350 ? 6.5 : 25;
+    positions.push((seeded(i * 3 + 501) - .5) * spread, seeded(i * 3 + 502) * 6.8,
+      (seeded(i * 3 + 503) - .43) * (i < 350 ? 6.2 : 22));
+  }
+  const flakes = new THREE.BufferGeometry();
+  flakes.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  scene.add(new THREE.Points(flakes, new THREE.ShaderMaterial({
+    uniforms: { uTime: uniforms.uTime },
+    transparent: true,
+    depthWrite: false,
+    vertexShader: `
+      uniform float uTime;
+      varying float vAlpha;
+      void main() {
+        vec3 p = position;
+        p.x += sin(uTime * .34 + p.y) * .28;
+        p.y = mod(p.y - uTime * (.17 + fract(abs(p.x) * 2.38) * .32), 6.8);
+        vec4 eye = modelViewMatrix * vec4(p, 1.0);
+        vAlpha = smoothstep(.8, 3.0, -eye.z) * (1.0 - smoothstep(14.0, 30.0, -eye.z));
+        gl_PointSize = clamp(26.0 / max(1.0, -eye.z), 1.05, 3.9);
+        gl_Position = projectionMatrix * eye;
+      }
+    `,
+    fragmentShader: `
+      varying float vAlpha;
+      void main() {
+        float soft = 1.0 - smoothstep(.08,.5,length(gl_PointCoord - .5));
+        gl_FragColor = vec4(.80,.93,1.0,soft * vAlpha * .74);
+      }
+    `
+  })));
+
+  const route = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(3.05, 2.53, 12.0),
+    new THREE.Vector3(1.95, 2.39, 8.7),
+    new THREE.Vector3(.64, 2.0, 4.75),
+    new THREE.Vector3(.06, 1.66, 1.60),
+    new THREE.Vector3(0, 1.59, -2.85)
+  ], false, "catmullrom", .36);
+  const aim = new THREE.Vector3();
+  return {
+    scene, veil, uniforms,
+    note: "철과 묵 · 실제 한옥 포탈, 룬과 빛의 궤적",
+    update(camera, p, time, mobile, lean, hovered) {
+      const turn = 1 - smooth(.28, .85, p);
+      route.getPoint(p, camera.position);
+      camera.position.x += lean.x * .54 * turn;
+      camera.position.y += lean.y * .27 * turn;
+      camera.position.z += (mobile ? 2.35 : 0) * turn;
+      aim.set(0, 1.6 + .63 * turn, -2.7 * smooth(.52, 1, p));
+      camera.lookAt(aim);
+      uniforms.uTime.value = time;
+      uniforms.uEnergy.value = p * .92 + (hovered ? .75 : 0);
+      light.intensity = 37 + uniforms.uEnergy.value * 16;
+      runeMaterial.opacity = .66 + .15 * Math.sin(time * 1.2) + p * .12;
+      filamentMaterial.opacity = .29 + .11 * Math.sin(time * .9) + p * .22;
+      for (let i = 0; i < mist.length; i++) {
+        const sprite = mist[i];
+        const k = i / mist.length;
+        const flow = (time * .12 + seeded(i + 980)) % 1;
+        const foot = i < 11;
+        sprite.position.set((k - .5) * (foot ? 5.2 : 3.5) + Math.sin(i + time * .5) * .38,
+          foot ? .04 + flow * .48 : .28 + flow * 2.46, .7 + seeded(i * 3 + 591) * 1.18);
+        sprite.scale.set(foot ? 1.9 + flow * 1.85 : .78 + flow * 1.23, foot ? .56 + flow * .49 : .83 + flow * 1.0, 1);
+        sprite.material.opacity = (foot ? .57 : .24) * Math.sin(flow * Math.PI) * (1 + p * .33);
+      }
+    }
+  };
+}
+
+
+function imageMap(image, pixelated = false) {
+  const texture = new THREE.Texture(image);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  if (pixelated) {
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
+    texture.generateMipmaps = false;
+  }
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function spriteCell(image, x, y, width, height) {
+  const texture = imageTexture(width, height, ctx => ctx.drawImage(image, x, y, width, height, 0, 0, width, height));
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  return texture;
+}
+
+function picture(parent, map, x, y, z, width, height, options = {}) {
+  const material = new THREE.MeshBasicMaterial({ map, toneMapped: false, side: THREE.DoubleSide, ...options });
+  const panel = mesh(parent, quad, material, x, y, z);
+  panel.scale.set(width, height, 1);
+  return panel;
+}
+
+function billboard(parent, map, width, height) {
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+    map, transparent: true, alphaTest: .055, depthWrite: false, toneMapped: false
+  }));
+  sprite.scale.set(width, height, 1);
+  parent.add(sprite);
+  return sprite;
+}
+
+function gardenScene(resources) {
+  const { images } = resources;
+  const scene = world(0x172821, 0x283b2e, 0xdcf3bf, 0x74d6b0, .035);
+  floor(scene, 0x21322a);
+  const soil = surface(0x57483b);
+  box(scene, soil, 0, .17, 0, 13.5, .42, 10.1);
+
+  const grass = spriteCell(images.tiles, 0, 0, 32, 32);
+  grass.wrapS = grass.wrapT = THREE.RepeatWrapping;
+  grass.repeat.set(13, 10);
+  const field = picture(scene, grass, 0, .387, 0, 13.45, 10.05);
+  field.rotation.x = -Math.PI / 2;
+  floorGlow(scene, 0x05170d, 0, -.07, 0, 16.8, 13.2, .87);
+
+  const stoneMap = spriteCell(images.tiles, ...resources.rock);
+  for (const z of [-4.76, 4.76]) {
+    for (let i = -7; i <= 7; i++) {
+      const tile = picture(scene, stoneMap, i * .85, .396, z, .87, .86, { transparent: true, alphaTest: .08 });
+      tile.rotation.x = -Math.PI / 2;
+    }
+  }
+
+  const frames = Array.from({ length: 5 }, (_, i) => spriteCell(images.player, i * 64, 0, 64, 64));
+  const arcs = Array.from({ length: 10 }, (_, i) => spriteCell(images.spark, i % 5 * 128, Math.floor(i / 5) * 128, 128, 128));
+  const hero = billboard(scene, frames[0], 1.15, 1.15);
+  hero.position.set(0, .96, .12);
+  const current = picture(scene, arcs[0], 0, .403, .12, 2.46, 2.46, { transparent: true, depthWrite: false });
+  current.rotation.x = -Math.PI / 2;
+  const rush = [imageMap(images.rush, true), imageMap(images.rush2, true)];
+  const wolf = imageMap(images.wolf, true);
+  const prickle = imageMap(images.prickle, true);
+  const bullet = imageMap(images.bullet, true);
+  const exp = imageMap(images.exp, true);
+  const mobs = Array.from({ length: 27 }, (_, i) => billboard(scene, i % 4 === 0 ? prickle : i % 4 === 1 ? wolf : rush[0], 1, 1));
+  const bullets = Array.from({ length: 10 }, () => billboard(scene, bullet, .28, .34));
+  const drops = Array.from({ length: 12 }, () => billboard(scene, exp, .24, .41));
+
+  return {
+    scene,
+    note: "Pale Garden · 실제 캐릭터, 몬스터, 타일 스프라이트",
+    update(camera, p, time) {
+      const cycle = smooth(.12, .94, p);
+      hero.material.map = frames[Math.floor(time * 7) % frames.length];
+      current.material.map = arcs[Math.floor(time * 11 + p * 12) % arcs.length];
+      for (let i = 0; i < mobs.length; i++) {
+        const mob = mobs[i];
+        const travel = (seeded(600 + i) * .71 + cycle * 1.19) % 1;
+        const amount = smooth(0, .10, travel) * (1 - smooth(.77, .98, travel));
+        const heading = i % 6 === 0 ? .65 + seeded(i + 870) * 1.06
+          : 1.92 + seeded(i + 872) * 2.91 + cycle * .14;
+        const radius = lerp(4.48, 1.30, travel);
+        const size = i % 4 > 1 ? 1.57 : i % 4 ? 1.31 : 1.25;
+        mob.position.set(Math.cos(heading) * radius * 1.27, .58 + .09 * Math.sin(travel * 18 + i), Math.sin(heading) * radius);
+        mob.scale.set(size * amount, size * amount * (i % 4 ? 1 : .80), 1);
+        mob.material.opacity = amount;
+        if (i % 4 > 1) mob.material.map = rush[Math.floor(time * 7 + travel * 11 + i) % 2];
+      }
+      for (let i = 0; i < bullets.length; i++) {
+        const travel = (p * 2.3 + i * .27) % 1;
+        const heading = i / bullets.length * TAU + p * 1.53;
+        const range = .66 + travel * 3.77;
+        bullets[i].position.set(Math.cos(heading) * range, .68, Math.sin(heading) * range);
+        bullets[i].material.opacity = 1 - smooth(.77, 1, travel);
+        bullets[i].material.rotation = -heading;
+      }
+      for (let i = 0; i < drops.length; i++) {
+        const angle = i * 2.39;
+        const range = 1.37 + seeded(349 + i) * 2.54;
+        drops[i].position.set(Math.cos(angle) * range, .56 + .04 * Math.sin(time * 2.7 + i), Math.sin(angle) * range);
+        drops[i].material.opacity = smooth(.27 + i * .026, .44 + i * .025, p);
+      }
+      frameCamera(camera, [2.2, 9.9, 10.6], [-.75, 8.8, 8.3], [0, .22, .06], p, -.63);
+    }
+  };
+}
+
+function keyboardScene(resources) {
+  const { images, layout, markerBounds } = resources;
+  const scene = world(0x1c252b, 0x2b353b, 0xf0f3ec, 0x8eaabd);
+  floor(scene, 0x242c32);
+  const steel = surface(0x677077, .49, .41);
+  const graphite = surface(0x22262b, .19, .60);
+  const glass = surface(0x52656c, .56, .13);
+  const white = surface(0xe6e1da);
+  const red = luminous(0xff4739);
+  box(scene, graphite, 0, .0, -.30, 9.0, .55, 6.6);
+  box(scene, white, 0, .29, -.30, 8.96, .073, 6.56);
+  floorGlow(scene, 0x11151c, 0, -.07, 0, 11, 8.2, .83);
+
+  const board = group(scene, 0, .34, .27);
+  board.rotation.y = -.14;
+  const paperWidth = 6.53;
+  const paperDepth = paperWidth * images.paper.height / images.paper.width;
+  const [left, top, right, bottom] = markerBounds;
+  const w = (right - left) * paperWidth;
+  const h = (bottom - top) * paperDepth;
+  const cx = ((left + right) * .5 - .5) * paperWidth;
+  const cz = ((top + bottom) * .5 - .5) * paperDepth;
+  box(board, white, 0, 0, 0, paperWidth, .024, paperDepth);
+  const sheet = picture(board, imageMap(images.paper), 0, .017, 0, paperWidth, paperDepth);
+  sheet.rotation.x = -Math.PI / 2;
+
+  const warpWidth = 1200;
+  const warpHeight = 620;
+  const visual = imageTexture(warpWidth, warpHeight, ctx => {
+    ctx.fillStyle = "#0c110e";
+    ctx.fillRect(0, 0, warpWidth, warpHeight);
+    ctx.strokeStyle = "#59d833";
+    ctx.fillStyle = "#c2e9c3";
+    ctx.font = "13px monospace";
+    ctx.lineWidth = 2;
+    for (const [key, [x, y, width, height]] of Object.entries(layout)) {
+      ctx.strokeRect(x, y, width, height);
+      ctx.fillText(key, x + 6, y + 18, width - 10);
+    }
+  });
+  const projection = picture(board, visual, cx, .045, cz, w, h, { transparent: true, opacity: 0, depthWrite: false });
+  projection.rotation.x = -Math.PI / 2;
+  const target = layout.F ?? layout.f;
+  const [keyX, keyY, keyWidth, keyHeight] = target;
+  const x = cx + ((keyX + keyWidth * .5) / warpWidth - .5) * w;
+  const z = cz + ((keyY + keyHeight * .5) / warpHeight - .5) * h;
+  const highlight = box(board, new THREE.MeshBasicMaterial({
+    color: 0xeaf740, transparent: true, opacity: 0, depthWrite: false
+  }), x, .04, z, keyWidth / warpWidth * w, .01, keyHeight / warpHeight * h);
+  highlight.renderOrder = 5;
+  const fingertip = mesh(board, orb, red, 1.31, .37, .44);
+  fingertip.scale.setScalar(.076);
+  fingertip.renderOrder = 6;
+  const pointToKey = new THREE.LineBasicMaterial({ color: 0xf8fa70, transparent: true, opacity: 0, depthWrite: false });
+  const ray = line(board, pointToKey, [new THREE.Vector3(), new THREE.Vector3()]);
+  ray.frustumCulled = false;
+  const corners = [[-1,-1], [1,-1], [-1,1], [1,1]].map(([sx, sz]) => {
+    const vertex = new THREE.Vector3(cx + sx * w / 2, .039, cz + sz * h / 2);
+    const guide = line(board, new THREE.LineBasicMaterial({ color: 0x7df055, transparent: true, opacity: 0, depthWrite: false }), [vertex, vertex.clone()]);
+    guide.frustumCulled = false;
+    return { guide, vertex };
+  });
+
+  const cameraStand = group(scene, -2.55, .32, -2.37);
+  drum(cameraStand, graphite, 0, .1, 0, .30, .18);
+  drum(cameraStand, steel, 0, 1.43, 0, .066, 2.69);
+  box(cameraStand, steel, 1.08, 2.78, 0, 2.15, .09, .095);
+  const webcam = group(cameraStand, 2.15, 2.72, .034);
+  webcam.rotation.x = .64;
+  box(webcam, graphite, 0, 0, 0, .81, .36, .22);
+  drum(webcam, steel, 0, 0, .119, .147, .044).rotation.x = Math.PI / 2;
+  drum(webcam, glass, 0, 0, .151, .097, .026).rotation.x = Math.PI / 2;
+  box(webcam, luminous(0x7fdb55), .28, .074, .12, .04, .028, .014);
+  return {
+    scene,
+    note: "가상 키보드 · 실제 인쇄용 키보드와 키 좌표",
+    update(camera, p) {
+      const lift = smooth(.29, .58, p);
+      const travel = smooth(.37, .71, p);
+      const pressed = smooth(.69, .78, p);
+      projection.position.y = .049 + lift * 1.73;
+      projection.material.opacity = .92 * lift;
+      highlight.position.y = projection.position.y + .012;
+      highlight.material.opacity = .36 * pressed;
+      fingertip.position.set(lerp(1.31, x, travel), projection.position.y + .17 + (1 - pressed) * .27, lerp(.44, z, travel));
+      const beam = ray.geometry.attributes.position;
+      beam.setXYZ(0, fingertip.position.x, fingertip.position.y, fingertip.position.z);
+      beam.setXYZ(1, fingertip.position.x, .036, fingertip.position.z);
+      beam.needsUpdate = true;
+      pointToKey.opacity = lift * .65;
+      for (const { guide, vertex } of corners) {
+        const positions = guide.geometry.attributes.position;
+        positions.setXYZ(1, vertex.x, projection.position.y, vertex.z);
+        positions.needsUpdate = true;
+        guide.material.opacity = lift * .45;
+      }
+      frameCamera(camera, [3.36, 6.02, 9.1], [.56, 5.74, 8.34], [.03, .92, .18], p, -.40);
+    }
+  };
+}
+
+
+function steamScene(resources) {
+  const { models, meshes } = resources;
+  const scene = world(0x171f2a, 0x293648, 0xe1edff, 0xaec7f0);
+  floor(scene, 0x26364c);
+  floorGlow(scene, 0x0c1726, 0, -.073, .16, 9.2, 7.1, 1);
+  floorGlow(scene, 0x9bb9dc, .67, -.069, .0, 7.3, 5.3, .38);
+  const stage = group(scene);
+  const iron = surface(0x3a4859, .55, .63);
+  drum(stage, iron, .13, .025, 0, 2.84, .21);
+  const bag = new THREE.Group();
+  bag.add(models.bag);
+  const pressure = { value: .18 };
+  const glass = new THREE.ShaderMaterial({
+    uniforms: { uLevel: pressure },
+    transparent: true,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    vertexShader: `
+      varying vec2 vGlass;
+      void main() {
+        vGlass = position.xy;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uLevel;
+      varying vec2 vGlass;
+      void main() {
+        float y = (vGlass.y + .235) / .47;
+        float wave = sin(vGlass.x * 58.0 + uLevel * 3.2) * .020 + cos(vGlass.x * 43.0) * .014;
+        float fill = 1.0 - smoothstep(uLevel + wave - .019, uLevel + wave + .023, y);
+        float edge = exp(-abs(y - uLevel - wave) * 37.0);
+        float frosted = .06 + .12 * pow(abs(sin(vGlass.x * 19.0 - vGlass.y * 6.0)), 3.0);
+        vec3 tint = mix(vec3(.40,.54,.62), vec3(.74,.78,.72), fill);
+        gl_FragColor = vec4(tint + edge * .32, frosted + fill * .43 + edge * .13);
+        ${outputColor}
+      }
+    `
+  });
+  mesh(bag, meshes.glass, glass, 0, -.055, 0).renderOrder = 3;
+
+  const needle = group(bag, -.103, -.105, .101);
+  box(needle, luminous(0x8e302b), 0, .018, 0, .004, .036, .003);
+  mesh(needle, orb, iron, 0, 0, .002).scale.setScalar(.006);
+  const mount = fitModel(bag, scene, 3.02, -.40, .20, .12);
+  const gun = fitModel(models.gun, scene, .98, 1.34, .18, -.68);
+  gun.rotation.set(.03, -.51, .44);
+  const plume = Array.from({ length: 17 }, () => vapor(scene, 0xe77b63));
+  const vent = new THREE.Vector3();
+  return {
+    scene,
+    note: "철과 묵 · 실제 스팀백, 유리 덮개, 화승총",
+    update(camera, p, time) {
+      const charge = lerp(.17, 1, smooth(.24, .69, p)) - .62 * smooth(.83, .99, p);
+      pressure.value = charge;
+      needle.rotation.z = lerp(2.08, -1.78, charge);
+      mount.rotation.y = lerp(-.35, .16, smooth(.11, .88, p));
+      mount.updateMatrixWorld(true);
+      bag.localToWorld(vent.set(.165, .345, -.005));
+      const overflow = smooth(.76, .98, charge);
+      for (let i = 0; i < plume.length; i++) {
+        const travel = (i / plume.length + time * .32 + p * .54) % 1;
+        const cloud = plume[i];
+        cloud.position.set(vent.x + Math.sin(i * .79 + time * .73) * travel * .20 + .16 * travel,
+          vent.y + travel * 2.40, vent.z - .22 * travel);
+        cloud.scale.set(.09 + travel * .89, .18 + travel * 1.31, 1);
+        cloud.material.opacity = Math.sin(travel * Math.PI) * (.10 + overflow * .64);
+        cloud.material.color.setRGB(.98, .85 - overflow * .62, .78 - overflow * .56);
+      }
+      frameCamera(camera, [3.2, 2.55, 9.32], [.44, 2.34, 7.27], [.04, 1.84, .07], p, -.39);
+    }
+  };
+}
+
+function tiledMap(image, across, depth) {
+  const texture = imageMap(image);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(across, depth);
+  return texture;
+}
+
+function trainScene(resources) {
+  const { models, images } = resources;
+  const scene = world(0x1c2935, 0x334454, 0xe6f0f8, 0x9fb5c9, .020);
+  floor(scene, 0x29333c, -.12);
+  const frame = surface(0x3c4753, .43, .49);
+  const rail = surface(0x343742, .60, .34);
+  const backWall = surface(0x98a9ad, .08, .68);
+  const yellow = surface(0xe6b44d, .03, .80);
+  const lights = luminous(0xe5f9ff);
+  const floorMap = tiledMap(images.tiles, 8, 2.5);
+  const platform = picture(scene, floorMap, 0, .69, 4.70, 33, 8.7);
+  platform.rotation.x = -Math.PI / 2;
+  box(scene, backWall, 0, .32, 4.71, 33, .72, 8.67);
+  const tactile = picture(scene, tiledMap(images.edge, 13, 1), 0, .698, .65, 33, .62);
+  tactile.rotation.x = -Math.PI / 2;
+  box(scene, yellow, 0, .707, .33, 33, .024, .077);
+  for (const z of [-1.35, -.52]) box(scene, rail, 0, -.02, z, 32, .085, .060);
+
+  const wallMap = tiledMap(images.wall, 11, 1.36);
+  picture(scene, wallMap, 0, 2.58, -4.15, 35, 5.20);
+  const sideWall = picture(scene, wallMap, 0, 2.58, 9.0, 35, 5.20);
+  sideWall.rotation.y = Math.PI;
+  const ceiling = picture(scene, tiledMap(images.roof, 7, 2), 0, 5.04, 2.20, 35, 12.5);
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.material.color.set(0x8e9693);
+  for (const z of [.36, 5.30]) box(scene, lights, 0, 4.96, z, 32, .034, .115);
+
+  const car = group(scene, -.26, 1.53, -2.31);
+  car.rotation.y = Math.PI;
+  car.scale.setScalar(.63);
+  const model = models.subway;
+  const panels = [model.getObjectByName("DoorNegative"), model.getObjectByName("DoorPositive")];
+  const frames = panels.map((panel, index) => {
+    const edge = group(scene, 0, 1.66, .21);
+    edge.scale.setScalar(.68);
+    edge.add(panel);
+    panel.traverse(part => {
+      if (!part.isMesh) return;
+      part.material.side = THREE.DoubleSide;
+      if (/Gray|Black/.test(part.material.name)) {
+        part.material = part.material.clone();
+        part.material.transparent = true;
+        part.material.opacity = .72;
+        part.material.depthWrite = false;
+      }
+    });
+    edge.userData.direction = index === 0 ? -1 : 1;
+    return edge;
+  });
+  car.add(model);
+  for (const x of [-6.25,-4.80,-3.38,-1.22,1.22,3.38,4.80,6.25]) {
+    box(scene, frame, x, 1.81, .23, .086, 2.33, .12);
+  }
+  box(scene, frame, 0, 2.96, .23, 32, .19, .14);
+  box(scene, frame, 0, .76, .23, 32, .105, .14);
+  const fixedGlass = new THREE.MeshStandardMaterial({
+    color: 0x5f87b0, metalness: .10, roughness: .16, transparent: true, opacity: .36, depthWrite: false
+  });
+  for (const x of [-3.84,-2.30,2.30,3.84]) box(scene, fixedGlass, x, 1.83, .245, 1.16, 2.13, .042);
+  const sign = group(scene, .03, 3.50, .40);
+  box(sign, surface(0xbfcad0), 0, 0, 0, 2.93, .84, .064);
+  picture(sign, imageMap(images.sign), 0, 0, .034, 2.45, .77, { transparent: true });
+  const cabin = new THREE.PointLight(0xc6efd4, 11, 4, 2);
+  cabin.position.set(0, 2.19, -1.22);
+  scene.add(cabin);
+  const wash = new THREE.PointLight(0xe5f2ff, 27, 10, 2);
+  wash.position.set(.35, 3.90, 3.65);
+  scene.add(wash);
+
+  return {
+    scene,
+    note: "SmartCity VR · 원본 열차, 출입문, 사시나무역 표지와 타일",
+    update(camera, p) {
+      const opening = smooth(.35, .69, p);
+      for (const door of frames) door.position.x = door.userData.direction * (.010 + .76 * opening);
+      frameCamera(camera, [6.56, 2.71, 8.61], [.66, 2.54, 6.53], [0, 2.18, .16], p, .71);
+    }
+  };
+}
+
+function inventoryScene(resources) {
+  const { models, images } = resources;
+  const scene = world(0x151c27, 0x253444, 0xc4d9ef, 0x527fa9, .036);
+  floor(scene, 0x24313b);
+  const floorTile = picture(scene, tiledMap(images.concrete, 13, 9), 0, -.070, -2.1, 18, 15);
+  floorTile.material.color.set(0x5a6978);
+  floorTile.rotation.x = -Math.PI / 2;
+  const wall = picture(scene, tiledMap(images.concrete, 6, 2), 0, 2.29, -5.78, 16.5, 4.65);
+  wall.material.color.set(0x41556e);
+  for (const x of [-6.4, -3.2, 3.2, 6.4]) {
+    box(scene, surface(0x293740), x, 2.18, -5.59, .14, 4.25, .34);
+  }
+  fitModel(models.workbench, scene, 2.66, -2.83, -.05, -3.90).rotation.y = -.12;
+  fitModel(models.storage, scene, 3.08, 2.28, -.06, -3.63).rotation.y = .16;
+  const ambient = new THREE.PointLight(0x6ab8fb, 37, 9, 2);
+  ambient.position.set(2.9, 2.68, -2.66);
+  scene.add(ambient);
+  const uiMap = Object.fromEntries(Object.entries(images).filter(([key]) => key !== "concrete").map(([key, value]) => [key, imageMap(value)]));
+  const translucent = { transparent: true, depthWrite: false };
+  const front = 1.12;
+  const slots = [];
+
+  function headerTexture(label) {
+    return imageTexture(448, 74, ctx => {
+      ctx.fillStyle = "#151d24";
+      ctx.beginPath();
+      ctx.roundRect(0, 2, 448, 70, 20);
+      ctx.fill();
+      ctx.fillStyle = "#edf4f8";
+      ctx.font = '700 32px "Malgun Gothic", sans-serif';
+      ctx.fillText(label, 18, 48);
+    });
+  }
+  function inventoryPanel(x, label, base, equipped) {
+    const panel = group(scene, x, 2.02, front);
+    picture(panel, uiMap[base], 0, .16, 0, 2.52, 3.55, translucent);
+    picture(panel, headerTexture(label), 0, 1.50, .026, 1.97, .25, translucent);
+    const cell = (col, row) => new THREE.Vector3(-.76 + col * .505, .35 - row * .505, .04);
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        const slot = cell(col, row);
+        picture(panel, uiMap.slot, slot.x, slot.y, slot.z, .465, .465, translucent);
+      }
+    }
+    if (equipped) {
+      for (const [col, key] of ["helmetSlot", "armorSlot", "gunSlot", "bagSlot"].entries()) {
+        const spot = cell(col, 0).x;
+        picture(panel, uiMap.slot, spot, .94, .039, .465, .465, translucent);
+        picture(panel, uiMap[key], spot, .94, .053, .36, .36, translucent);
+      }
+    }
+    function at(key, col, row) {
+      const position = cell(col, row);
+      return picture(panel, uiMap[key], position.x, position.y, .062, .41, .41, translucent);
+    }
+    const items = equipped
+      ? [["battery",0,0],["tape",2,0],["apple",3,0],["bag",0,1],["bandage",2,1],["metal",3,2]]
+      : [["ak47",0,0],["rope",2,0],["protein",3,1],["vest",1,2],["metal",0,3]];
+    for (const [key, col, row] of items) at(key, col, row);
+    const selected = equipped ? cell(1,0) : cell(2,1);
+    const highlight = picture(panel, uiMap.selected, selected.x, selected.y, .056, .465, .465, translucent);
+    slots.push({ position: panel.position.clone().add(selected), highlight });
+  }
+  inventoryPanel(-1.39, "가방", "bagPanel", true);
+  inventoryPanel(1.40, "창고", "storagePanel", false);
+  const medkit = picture(scene, uiMap.medkit, 0, 0, 0, .47, .47, translucent);
+  medkit.renderOrder = 5;
+
+  return {
+    scene,
+    note: "NyanKov · 실제 인벤토리 UI, 아이템 아이콘, 벙커 소품",
+    update(camera, p) {
+      const shift = smooth(.30, .73, p);
+      medkit.position.copy(slots[0].position).lerp(slots[1].position, shift);
+      medkit.position.y += Math.sin(shift * Math.PI) * .86;
+      medkit.position.z += .052 + Math.sin(shift * Math.PI) * .54;
+      medkit.rotation.z = Math.sin(shift * Math.PI) * -.18;
+      slots[0].highlight.material.opacity = 1 - shift * .90;
+      slots[1].highlight.material.opacity = .11 + shift * .89;
+      frameCamera(camera, [2.60, 3.55, 8.92], [-.55, 3.09, 8.20], [.16, 1.98, .65], p, -.27);
+    }
+  };
+}
+
+
+function bossScene(resources) {
+  const { models, images } = resources;
+  const scene = world(0x1a1828, 0x31263e, 0xd6d0ec, 0xa087d7, .039);
+  floor(scene, 0x231e2b);
+  const steel = surface(0x4e4a56, .41, .55);
+  const trim = surface(0x2f2b35, .37, .60);
+  const deck = surface(0x4a4550, .34, .68);
+  box(scene, trim, 0, .075, .02, 14.0, .30, 5.26);
+  box(scene, deck, 0, .245, .02, 13.94, .054, 5.20);
+  const joints = new THREE.LineBasicMaterial({ color: 0x282631 });
+  for (let x = -6.5; x < 7; x += 1.1) {
+    line(scene, joints, [new THREE.Vector3(x, .279, -2.56), new THREE.Vector3(x, .279, 2.59)]);
+  }
+  for (const z of [-1.35,-.02,1.25]) {
+    line(scene, joints, [new THREE.Vector3(-6.94, .279, z), new THREE.Vector3(6.94, .279, z)]);
+  }
+
+  const source = models.wall;
+  source.traverse(object => {
+    if (object.isMesh) object.material.color.set(0xa19ab4);
+  });
+  const wall = fitModel(source, scene, 4.85, -7.1, -.02, -3.57);
+  wall.rotation.y = Math.PI / 2;
+  for (const x of [-2.38, 2.36, 7.1]) {
+    const section = wall.clone();
+    section.position.x = x;
+    scene.add(section);
+  }
+  for (const x of [-4.79, -.01, 4.74]) {
+    box(scene, steel, x, 2.47, -3.46, .14, 4.91, .25);
+    const lamp = mesh(scene, orb, luminous(0xe6c9af), x, 3.64, -3.29);
+    lamp.scale.set(.23, .084, .071);
+  }
+  const key = new THREE.PointLight(0xffb694, 38, 9, 2);
+  key.position.set(1.26, 4.24, 2.16);
+  scene.add(key);
+  floorGlow(scene, 0x1a101f, 0, .281, .15, 3.36, 2.1, .97);
+
+  const atlas = imageMap(images.fighter);
+  atlas.repeat.set(1 / 6, 1 / 4);
+  atlas.minFilter = THREE.LinearFilter;
+  atlas.generateMipmaps = false;
+  const fighter = billboard(scene, atlas, 5.04, 5.04);
+  fighter.position.set(.11, 2.27, .13);
+  const ringArt = picture(scene, imageMap(images.ring), 0, 1.72, .16, 3.64, 3.64, {
+    transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xd399ff
+  });
+  const hitArt = picture(scene, imageMap(images.slash), 0, 1.65, 1.01, 4.12, 3.13, {
+    transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xb9e7ff
+  });
+  const fog = Array.from({ length: 5 }, (_, i) => {
+    const cloud = vapor(scene, 0x857397);
+    cloud.position.set((i - 2) * 2.2, .62, -2.94);
+    cloud.scale.set(5.2, 1.45, 1);
+    cloud.material.opacity = .21;
+    return cloud;
+  });
+  return {
+    scene,
+    note: "Grimoire · 보스전 테스트 모델과 원본 애니메이션을 렌더링",
+    update(camera, p, time) {
+      let row = 0;
+      let frame = Math.floor(time * 7) % 6;
+      if (p >= .74) {
+        row = 3;
+        frame = 1 + Math.floor(smooth(.74, .84, p) * 3);
+      } else if (p > .34) {
+        const attack = clamp((p - .34) / .40 * 3, 0, 2.999);
+        const strike = Math.floor(attack);
+        const phase = attack % 1;
+        row = strike % 2 === 1 ? 2 : 1;
+        frame = Math.min(5, Math.floor(phase * 6));
+      }
+      atlas.offset.set(frame / 6, 1 - (row + 1) / 4);
+      const phase = (((p - .34) / .40) * 3) % 1;
+      const active = p > .34 && p < .74 ? 1 : 0;
+      ringArt.material.opacity = active * smooth(0,.26,phase) * (1 - smooth(.55,.76,phase)) * .67;
+      ringArt.scale.setScalar(lerp(5.1, 2.18, smooth(.0,.73,phase)));
+      hitArt.material.opacity = active * smooth(.58,.70,phase) * (1 - smooth(.75,.97,phase)) * .77;
+      hitArt.rotation.z = .27 + p * 1.15;
+      for (let i = 0; i < fog.length; i++) fog[i].material.rotation = Math.sin(time * .22 + i) * .14;
+      frameCamera(camera, [4.82, 2.90, 10.6], [-.52, 2.36, 7.30], [.10, 1.72, .18], p, -.48);
+    }
+  };
+}
+
+function decodeBytes(encoded) {
+  return Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
+}
+
+async function sceneResources(loader) {
+  const names = ["portal", "steam", "smartcity", "nyankov", "grimoire", "palegarden", "keyboard"];
+  const pending = Object.create(null);
+  globalThis.gateScenePacks = pending;
+  try {
+    const resources = await Promise.all(names.map(async name => {
+      const raw = await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "assets/gate-scenes/" + name + ".js";
+        script.fetchPriority = name === "portal" ? "high" : "auto";
+        script.onload = () => {
+          script.remove();
+          if (pending[name]) resolve(pending[name]);
+          else reject(new Error("Missing portfolio assets for " + name));
+        };
+        script.onerror = () => {
+          script.remove();
+          reject(new Error("Could not load portfolio assets for " + name));
+        };
+        document.head.append(script);
+      });
+      const [models, images] = await Promise.all([
+        Promise.all(Object.entries(raw.models ?? {}).map(async ([id, data]) => {
+          const gltf = await loader.parseAsync(decodeBytes(data).buffer, "");
+          return [id, gltf.scene];
+        })),
+        Promise.all(Object.entries(raw.images ?? {}).map(async ([id, data]) => {
+          const image = new Image();
+          image.src = data;
+          await image.decode();
+          return [id, image];
+        }))
+      ]);
+      const meshes = Object.fromEntries(Object.entries(raw.meshes ?? {}).map(([id, data]) => {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(decodeBytes(data.positions).buffer), 3));
+        geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(decodeBytes(data.indices).buffer), 1));
+        geometry.computeVertexNormals();
+        return [id, geometry];
+      }));
+      return [name, { ...raw.data, models: Object.fromEntries(models), images: Object.fromEntries(images), meshes }];
+    }));
+    return Object.fromEntries(resources);
+  } finally {
+    delete globalThis.gateScenePacks;
+  }
+}
+
+
+const root = document.documentElement;
+const view = document.querySelector(".view");
+const canvas = document.querySelector("#gate-canvas");
+const note = document.querySelector(".scene-note");
+const motion = document.querySelector(".motion");
+const projectMap = document.querySelector("#explore");
+const sections = Array.from(document.querySelectorAll(".track > [data-scene]"));
+const menu = document.querySelector("#project-menu");
+const navLinks = Array.from(menu.querySelectorAll("a:not([data-open-map])"));
+const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+const still = new URLSearchParams(location.search).get("t");
+const frozenTime = still === null ? null : clamp(Number(still) || 0, 0, 3600);
+
+menu.addEventListener("click", event => {
+  if (event.target.closest("a")) menu.open = false;
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && menu.open) {
+    menu.open = false;
+    menu.querySelector("summary").focus();
+  }
+});
+
+function sceneTransition(renderer) {
+  const options = {
+    type: renderer.extensions.has("EXT_color_buffer_float") ? THREE.HalfFloatType : THREE.UnsignedByteType,
+    depthBuffer: true
+  };
+  const previous = new THREE.WebGLRenderTarget(1, 1, options);
+  const current = previous.clone();
+  const uniforms = {
+    uPrevious: { value: previous.texture },
+    uCurrent: { value: current.texture },
+    uMix: { value: 0 },
+    uPortal: { value: 0 },
+    uAspect: { value: 1 }
+  };
+  const composite = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-.5, .5, .5, -.5, .1, 3);
+  camera.position.z = 1;
+  const plate = mesh(composite, quad, new THREE.ShaderMaterial({
+    uniforms,
+    depthTest: false,
+    vertexShader: vertexUV,
+    fragmentShader: `
+      uniform sampler2D uPrevious;
+      uniform sampler2D uCurrent;
+      uniform float uMix;
+      uniform float uPortal;
+      uniform float uAspect;
+      varying vec2 vUv;
+      void main() {
+        vec2 uv = vUv;
+        vec2 center = uv - vec2(.50,.50);
+        float folds = sin(uv.y * 15.0 + uv.x * 11.0) * .035 + sin(uv.y * 31.0 - uv.x * 17.0) * .018;
+        float diagonal = uv.x * .64 + (1.0 - uv.y) * .36;
+        float radius = length(center * vec2(max(1.0,uAspect), 1.0)) / (.5 * length(vec2(max(1.0,uAspect), 1.0)));
+        float value = mix(diagonal, radius, uPortal) + folds;
+        float travel = mix(-.23, 1.22, uMix);
+        float opacity = 1.0 - smoothstep(travel - .14, travel + .14, value);
+        float mist = 1.0 - smoothstep(.02,.22,abs(value - travel));
+        vec3 color = mix(texture2D(uPrevious,uv).rgb, texture2D(uCurrent,uv).rgb, opacity);
+        color = mix(color, vec3(.28,.50,.66), mist * mix(.24,.49,uPortal));
+        gl_FragColor = vec4(color, 1.0);
+        ${outputColor}
+      }
+    `
+  }), 0, 0, 0);
+  plate.frustumCulled = false;
+
+  return {
+    resize(width, height, density) {
+      previous.setSize(Math.ceil(width * density * .85), Math.ceil(height * density * .85));
+      current.setSize(previous.width, previous.height);
+      uniforms.uAspect.value = width / height;
+    },
+    render(from, to, amount, throughPortal) {
+      renderer.setRenderTarget(previous);
+      renderer.render(from.scene, from.camera);
+      renderer.setRenderTarget(current);
+      renderer.render(to.scene, to.camera);
+      renderer.setRenderTarget(null);
+      uniforms.uMix.value = amount;
+      uniforms.uPortal.value = throughPortal ? 1 : 0;
+      renderer.render(composite, camera);
+    }
+  };
+}
+
+async function start() {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  const loader = new GLTFLoader();
+  const resources = await sceneResources(loader);
+  const projects = {
+    portal: { make: portalScene, ambient: true },
+    steam: { make: steamScene, ambient: true, portrait: 1.20 },
+    smartcity: { make: trainScene },
+    nyankov: { make: inventoryScene, portrait: 1.23 },
+    grimoire: { make: bossScene, ambient: true, portrait: 1.06 },
+    palegarden: { make: gardenScene, ambient: true, portrait: 1.25 },
+    keyboard: { make: keyboardScene, portrait: 1.35 }
+  };
+  const sequence = sections.map(section => projects[section.dataset.scene]);
+  const scenes = [];
+  const transition = sceneTransition(renderer);
+  const pointer = new THREE.Vector2();
+  const lean = new THREE.Vector2();
+  const raycaster = new THREE.Raycaster();
+  const forward = new THREE.Vector3();
+  const topbar = document.querySelector(".topbar");
+  let width = 0;
+  let height = 0;
+  let header = 0;
+  let chapters = [];
+  let frameId = 0;
+  let lastTick = null;
+  let time = frozenTime ?? 0;
+  let activeScene = 0;
+  let portalProgress = 0;
+  let hovered = false;
+  let paused = frozenTime !== null;
+  let visible = true;
+  let lost = false;
+
+  function setScene(index) {
+    if (view.dataset.scene === sections[index].dataset.scene) return;
+    activeScene = index;
+    view.dataset.scene = sections[index].dataset.scene;
+    note.textContent = scenes[index].note;
+    for (let i = 0; i < navLinks.length; i++) {
+      if (i + 1 === index) navLinks[i].setAttribute("aria-current", "location");
+      else navLinks[i].removeAttribute("aria-current");
+    }
+  }
+
+  function drawScene(index, y, mobile) {
+    if (!scenes[index]) {
+      scenes[index] = sequence[index].make(resources[sections[index].dataset.scene]);
+      scenes[index].camera = new THREE.PerspectiveCamera(40, 1, .045, 170);
+    }
+    const chapter = chapters[index];
+    const local = index === 0
+      ? clamp((y - chapter.top) / (chapter.length - Math.max(header + 12, height * .08)), 0, 1)
+      : clamp((y - chapter.top + height * .48) / (chapter.length - height * .07), 0, 1);
+    const turn = index === 0 ? 1 - smooth(.31, .84, local) : 1;
+    const shot = scenes[index];
+    const camera = shot.camera;
+    camera.fov = mobile ? (index === 0 ? 55 : 62) : (index === 0 ? 40 : 42);
+    camera.setViewOffset(width, height, mobile ? 0 : -width * .174 * turn,
+      mobile ? height * (index === 0 ? -.148 * turn : .146) : 0, width, height);
+    if (index === 0) portalProgress = local;
+    shot.update(camera, local, time, mobile, lean, hovered);
+    if (mobile && index > 0) {
+      const fit = (sequence[index].portrait ?? 1) * clamp(.46 / camera.aspect, 1, 1.18);
+      camera.getWorldDirection(forward);
+      camera.position.addScaledVector(forward, (1 - fit) * camera.position.length());
+    }
+    camera.updateMatrixWorld();
+    return shot;
+  }
+
+  function measure() {
+    if (!root.classList.contains("story-ready")) return;
+    const nextWidth = Math.max(1, view.clientWidth);
+    const nextHeight = Math.max(1, view.clientHeight);
+    header = topbar.offsetHeight;
+    chapters = sections.map(section => {
+      const rect = section.getBoundingClientRect();
+      return { top: rect.top + scrollY, length: rect.height };
+    });
+    if (nextWidth === width && nextHeight === height) return;
+    width = nextWidth;
+    height = nextHeight;
+    const density = Math.min(devicePixelRatio, width <= 760 ? 1.25 : 1.45, Math.sqrt(2_100_000 / (width * height)));
+    renderer.setPixelRatio(density);
+    renderer.setSize(width, height, false);
+    transition.resize(width, height, density);
+  }
+
+  function requestFrame() {
+    if (!frameId && visible && !lost && !document.hidden && !projectMap.open && root.classList.contains("story-ready")) {
+      frameId = requestAnimationFrame(frame);
+    }
+  }
+
+  function frame(tick) {
+    frameId = 0;
+    if (!visible || lost || document.hidden || reduced.matches || projectMap.open) return;
+    try {
+      const dt = lastTick === null ? 0 : Math.min((tick - lastTick) / 1000, .05);
+      if (!paused) time += dt;
+      lastTick = tick;
+      lean.lerp(paused ? zeroPointer : pointer, 1 - Math.exp(-8 * dt));
+      const y = scrollY;
+      const mobile = width <= 760;
+      const approach = height * .50;
+      let index = 0;
+      while (index + 1 < chapters.length && y >= chapters[index + 1].top - approach) index++;
+      const incoming = drawScene(index, y, mobile);
+      const end = chapters[index].top - Math.max(header + 12, height * .095);
+      const amount = index === 0 ? 1 : smooth(chapters[index].top - approach, end, y);
+      if (amount < 1) {
+        const outgoing = drawScene(index - 1, y, mobile);
+        transition.render(outgoing, incoming, amount, index === 1);
+      } else {
+        renderer.render(incoming.scene, incoming.camera);
+      }
+      const crossing = String(amount < 1);
+      if (view.dataset.crossing !== crossing) view.dataset.crossing = crossing;
+      const visibleIndex = amount < .5 ? index - 1 : index;
+      setScene(visibleIndex);
+      const animated = sequence[index].ambient || (amount < 1 && sequence[index - 1].ambient);
+      if (!paused && animated) requestFrame();
+      else lastTick = null;
+    } catch (error) {
+      showStill();
+      console.warn("3D 장면을 표시할 수 없어 프로젝트 기록을 표시합니다.", error);
+    }
+  }
+
+  function currentAnchor() {
+    const hashId = location.hash.slice(1);
+    const hash = hashId ? document.getElementById(hashId) : null;
+    if (hash && (!root.classList.contains("story-ready") || Math.abs(hash.getBoundingClientRect().top - header) < 120)) return hash;
+    return activeScene > 0 ? sections[activeScene] : null;
+  }
+
+  function showStill() {
+    const anchor = currentAnchor();
+    lost = true;
+    cancelAnimationFrame(frameId);
+    root.classList.remove("story-ready");
+    root.dataset.scene = "still";
+    anchor?.scrollIntoView({ behavior: "instant" });
+  }
+
+  function applyMotion() {
+    if (lost) return;
+    const anchor = currentAnchor();
+    root.classList.toggle("story-ready", !reduced.matches);
+    root.dataset.scene = reduced.matches ? "still" : "webgl";
+    lastTick = null;
+    if (anchor && anchor.id !== "top") anchor.scrollIntoView({ behavior: "instant" });
+    measure();
+    requestFrame();
+  }
+
+  const zeroPointer = new THREE.Vector2();
+  function portalHit(event) {
+    const shot = scenes[0];
+    if (!shot || activeScene !== 0 || portalProgress > .71) return null;
+    const rect = canvas.getBoundingClientRect();
+    pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, 1 - (event.clientY - rect.top) / rect.height * 2);
+    raycaster.setFromCamera(pointer, shot.camera);
+    return raycaster.intersectObject(shot.veil)[0];
+  }
+
+  canvas.addEventListener("pointermove", event => {
+    if (event.pointerType === "touch" || paused) return;
+    const hit = portalHit(event);
+    hovered = Boolean(hit);
+    if (hit?.uv) scenes[0].uniforms.uCursor.value.copy(hit.uv);
+    canvas.style.cursor = hovered ? "pointer" : "";
+    requestFrame();
+  }, { passive: true });
+  canvas.addEventListener("pointerleave", () => {
+    hovered = false;
+    pointer.set(0, 0);
+    canvas.style.cursor = "";
+  });
+  canvas.addEventListener("click", event => {
+    if (portalHit(event)) document.querySelector(".enter").click();
+  });
+  canvas.addEventListener("webglcontextlost", event => {
+    event.preventDefault();
+    showStill();
+  }, { once: true });
+  motion.setAttribute("aria-pressed", String(paused));
+  motion.addEventListener("click", () => {
+    paused = !paused;
+    motion.setAttribute("aria-pressed", String(paused));
+    if (paused) {
+      hovered = false;
+      lean.set(0, 0);
+    }
+    lastTick = null;
+    requestFrame();
+  });
+  window.addEventListener("scroll", requestFrame, { passive: true });
+  projectMap.addEventListener("close", () => {
+    lastTick = null;
+    requestFrame();
+  });
+  document.addEventListener("visibilitychange", () => {
+    lastTick = null;
+    requestFrame();
+  });
+  reduced.addEventListener("change", applyMotion);
+  new ResizeObserver(() => {
+    measure();
+    requestFrame();
+  }).observe(document.querySelector(".track"));
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    lastTick = null;
+    requestFrame();
+  }).observe(view);
+  applyMotion();
+}
+
+let attempted = false;
+function enable() {
+  if (attempted || reduced.matches) return;
+  attempted = true;
+  start().catch(error => {
+    root.dataset.scene = "still";
+    root.classList.remove("story-ready");
+    console.warn("3D 장면을 불러올 수 없어 프로젝트 기록을 표시합니다.", error);
+  });
+}
+root.dataset.scene = "still";
+enable();
+reduced.addEventListener("change", enable);
+
+  </script>
+</body>
+</html>

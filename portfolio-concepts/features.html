@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>시안 B — 기능 탐색</title><link rel="stylesheet" href="style.css"><script src="script.js" defer></script>
+</head>
+<body class="concept-b">
+  <div class="preview-bar"><span>포트폴리오 시안</span><nav aria-label="시안 선택"><a href="index.html">A 플레이 릴</a><a href="features.html" aria-current="page">B 기능 탐색</a><a href="stories.html">C 문제 해결</a></nav><a class="original" href="../index.html">기존 사이트 ↗</a></div>
+  <header class="b-header"><a href="#top" class="b-logo">YPH<span>✳</span></a><span>윤평화 / Unity 개발자</span><a href="#contact">연락하기 ↗</a></header>
+  <main id="top">
+    <section class="b-hero">
+      <div class="b-heading"><h1>제가 만든<br>기능을 보세요<span>.</span></h1><p>긴 설명보다 플레이 화면으로.<br>궁금한 기능을 선택해 보세요.</p></div>
+      <div class="b-stage" data-feature-switcher>
+        <div class="b-choices" aria-label="기능 선택">
+          <p>어떤 작업이 궁금하신가요?</p>
+          <button type="button" data-feature="combat" aria-pressed="true"><span>전투와 조준</span><b>↗</b></button>
+          <button type="button" data-feature="inventory" aria-pressed="false"><span>인벤토리</span><b>↗</b></button>
+          <button type="button" data-feature="vr" aria-pressed="false"><span>VR 멀티플레이</span><b>↗</b></button>
+        </div>
+        <div class="b-views">
+          <article class="b-view" data-feature-panel="combat">
+            <img src="../assets/s_aim.jpg" alt="철과 묵에서 총으로 보스를 조준하는 화면">
+            <div class="b-view-copy"><div><p>철과 묵 · 전투 시스템</p><h2>조준하고, 반응하고,<br>받아치는 전투.</h2><span>화승총과 조준 연출, 패링, 적 AI를 구현했습니다.</span></div><a href="../index.html#cheolmuk/stages/1" aria-label="철과 묵 전투 기능 자세히 보기">↗</a></div>
+          </article>
+          <article class="b-view" data-feature-panel="inventory" hidden>
+            <img src="../assets/nk_drag.jpg" alt="NyanKov에서 인벤토리 아이템을 이동하는 화면">
+            <div class="b-view-copy"><div><p>NyanKov · 인벤토리</p><h2>아이템이 이동해도<br>데이터는 안전하게.</h2><span>데이터 모델부터 드래그 앤 드롭과 제작까지 구현했습니다.</span></div><a href="../index.html#nyankov/stages/1" aria-label="NyanKov 인벤토리 자세히 보기">↗</a></div>
+          </article>
+          <article class="b-view" data-feature-panel="vr" hidden>
+            <img src="../assets/vr_card.jpg" alt="SmartCity VR 지하철 승강장 화면">
+            <div class="b-view-copy"><div><p>SmartCity VR · 네트워크</p><h2>같은 월드를<br>함께 경험하도록.</h2><span>문 상태 동기화, NPC와 VR 아바타를 구현했습니다.</span></div><a href="../index.html#smartcity/stages/2" aria-label="SmartCity VR 멀티플레이 자세히 보기">↗</a></div>
+          </article>
+        </div>
+      </div>
+      <p class="b-credit">철과 묵의 보스·HUD·월드와 SmartCity VR의 3D 에셋 등은 팀원이 제작했습니다.</p>
+    </section>
+    <section class="b-work" id="work"><div class="b-work-head"><h2>더 많은 작업들</h2><a href="../index.html#projects">전체 프로젝트 ↗</a></div>
+      <div class="b-work-grid">
+        <a href="../index.html#cheolmuk/stages/6"><img src="../assets/s_portal.jpg" alt="철과 묵 포탈 이펙트"><span>포탈 VFX</span><strong>깊이가 느껴지는 문</strong></a>
+        <a href="../index.html#palegarden/overview"><img src="../assets/pg_swarm.jpg" alt="Pale Garden 전투 화면"><span>1인 개발</span><strong>기획부터 빌드까지</strong></a>
+        <a href="../index.html#smartcity/stages/4"><img src="../assets/vr_rig.jpg" alt="VR 아바타 움직임 테스트"><span>VR 아바타</span><strong>머리와 손으로 움직이기</strong></a>
+      </div>
+    </section>
+  </main>
+  <footer class="b-footer" id="contact"><p>윤평화 / Unity 클라이언트 개발자</p><h2>다음에는 어떤<br>게임을 만들까요?</h2><div><a href="mailto:yph2003go@naver.com">이메일 보내기 ↗</a><a href="https://github.com/peace03">GitHub ↗</a></div></footer>
+</body>
+</html>

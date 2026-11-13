@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Unity 게임 클라이언트 개발자 윤평화의 포트폴리오. 받아치기 판정을 직접 움직여 보고 여섯 프로젝트를 살펴보세요.">
+  <meta name="theme-color" content="#edeadc">
+  <title>전투의 한 프레임 · 윤평화</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #edeadc;
+      --pine: #1b2d22;
+      --green: #274334;
+      --lime: #dbe89c;
+      --gold: #f3d58f;
+      --white: #f5f1e3;
+      --muted: #536356;
+      --night-text: #d8e0ce;
+      --gutter: clamp(18px, 4.2vw, 68px);
+      --sans: Pretendard, "Malgun Gothic", system-ui, sans-serif;
+      --serif: "Instrument Serif", Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--pine);
+      font: 1rem/1.55 var(--sans);
+      word-break: keep-all;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+    ::selection { background: var(--gold); color: var(--pine); }
+    .shell { width: min(100% - var(--gutter) * 2, 1360px); margin-inline: auto; }
+    .skip {
+      position: absolute;
+      z-index: 2;
+      top: 12px;
+      left: var(--gutter);
+      padding: 10px 16px;
+      background: var(--white);
+      transform: translateY(-160%);
+    }
+    .skip:focus { transform: none; }
+
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 78px; }
+    .masthead .name { font-size: clamp(1.15rem, 2.5vw, 1.42rem); font-weight: 850; letter-spacing: -.055em; }
+    .masthead nav { display: flex; align-items: center; gap: clamp(12px, 3vw, 36px); }
+    .masthead nav a { display: grid; min-height: 44px; place-items: center; font-size: .94rem; font-weight: 650; }
+    .masthead nav a:hover, .caption a:hover, .contact-links a:hover { text-decoration: underline; text-underline-offset: .25em; }
+
+    .instrument { display: grid; grid-template-columns: 37% minmax(0, 1fr); background: var(--pine); color: var(--white); }
+    .intro {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: clamp(30px, 5vw, 72px);
+      position: relative;
+      padding: clamp(26px, 3.6vw, 60px);
+      background: var(--lime);
+      color: var(--pine);
+    }
+    .intro::before, .intro::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      right: -12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--paper);
+      pointer-events: none;
+    }
+    .intro::before { top: -12px; }
+    .intro::after { bottom: -12px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 6.25vw, 6.2rem);
+      font-weight: 850;
+      line-height: .99;
+      letter-spacing: -.065em;
+    }
+    h1 span { display: block; }
+    .intro p { max-width: 24ch; margin: 30px 0 0; font-size: clamp(1rem, 1.35vw, 1.22rem); line-height: 1.55; }
+    .primary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      min-height: 50px;
+      padding: 10px 16px;
+      background: var(--pine);
+      color: var(--white);
+      font-weight: 700;
+      transition: background-color .18s ease, color .18s ease;
+    }
+    .primary-link:hover { background: var(--white); color: var(--pine); }
+    .primary-link:focus-visible { outline-color: var(--pine); }
+
+    .exhibit { min-width: 0; padding: clamp(15px, 2.1vw, 30px); }
+    .exhibit figure { margin: 0; }
+    .frame {
+      --ring-scale: 1.82;
+      --ring-ink: var(--gold);
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #192426;
+    }
+    .frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .frame[data-phase="hit"] { --ring-ink: #e2fd8a; }
+    .target {
+      position: absolute;
+      left: 54%;
+      top: 52%;
+      width: clamp(50px, 9.3vw, 132px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .target-ring, .probe-ring { position: absolute; inset: 0; border-radius: 50%; }
+    .target-ring { border: 1px dashed var(--white); box-shadow: 0 0 0 1px #18261f66; }
+    .probe-ring {
+      border: 2px solid var(--ring-ink);
+      transform: scale(var(--ring-scale));
+      transition: border-color .16s ease;
+      box-shadow: 0 0 18px #121b1b88, inset 0 0 16px #121b1b55;
+    }
+    .probe-ring::before, .probe-ring::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 10%;
+      height: 2px;
+      background: var(--ring-ink);
+    }
+    .probe-ring::before { left: -10%; }
+    .probe-ring::after { right: -10%; }
+    .center-mark { position: absolute; inset: 0; display: grid; place-items: center; }
+    .center-mark::before, .center-mark::after {
+      content: "";
+      grid-area: 1 / 1;
+      width: 14px;
+      height: 2px;
+      background: var(--ring-ink);
+      box-shadow: 0 0 6px #1119;
+    }
+    .center-mark::after { rotate: 90deg; }
+    .frame[data-phase="hit"] .target::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--ring-ink);
+      border-radius: 50%;
+      animation: confirm-timing .42s ease-out both;
+    }
+    @keyframes confirm-timing {
+      from { opacity: .9; transform: scale(1); }
+      to { opacity: 0; transform: scale(1.65); }
+    }
+    .caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 16px; padding-block: 6px 3px; }
+    .caption, .scale, .timing-note { color: var(--night-text); font-size: .875rem; }
+    .caption a { display: inline-flex; align-items: center; min-height: 44px; }
+
+    .timing-controls { padding-top: 9px; }
+    .timing-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+    .timing-head label { font-size: 1.13rem; font-weight: 750; }
+    .timing-head output { display: flex; gap: .7em; align-items: baseline; font-size: .95rem; font-weight: 700; color: var(--gold); }
+    .timing-head output[data-phase="hit"] { color: var(--lime); }
+    .time-value { font-variant-numeric: tabular-nums; }
+    .meter { position: relative; }
+    .meter-rail { position: absolute; inset: 21px 10px auto; height: 2px; background: #819184; pointer-events: none; }
+    .meter-rail::before {
+      content: "";
+      position: absolute;
+      left: 33.333%;
+      width: 33.334%;
+      height: 10px;
+      top: -4px;
+      background: var(--lime);
+    }
+    .meter-rail::after { content: ""; position: absolute; left: 50%; top: -6px; width: 1px; height: 14px; background: var(--pine); }
+    #timing { appearance: none; display: block; position: relative; width: 100%; height: 44px; margin: 0; background: transparent; cursor: ew-resize; }
+    #timing::-webkit-slider-thumb { appearance: none; width: 20px; height: 24px; background: var(--gold); border: 2px solid var(--pine); border-radius: 0; }
+    #timing::-moz-range-thumb { width: 16px; height: 20px; background: var(--gold); border: 2px solid var(--pine); border-radius: 0; }
+    #timing:focus-visible { outline-offset: 1px; }
+    .scale { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; text-align: center; margin-top: -7px; }
+    .scale span:first-child { text-align: left; }
+    .scale span:last-child { text-align: right; }
+    .center-button { justify-self: center; min-height: 44px; padding: 4px 9px; border: 0; background: transparent; color: var(--white); text-decoration: underline; text-underline-offset: .24em; }
+    .center-button:hover { color: var(--lime); }
+    .timing-note { margin: 2px 0 0; }
+
+    .works { margin-block: clamp(66px, 8vw, 120px); }
+    .works h2, .contact h2 { margin: 0; font-size: clamp(2.55rem, 5.3vw, 5rem); line-height: 1.02; font-weight: 820; letter-spacing: -.078em; }
+    .works h2 { margin-bottom: clamp(26px, 3.5vw, 48px); }
+    .archive { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 3.1vw, 45px) clamp(16px, 2.1vw, 30px); }
+    .record { min-width: 0; }
+    .record a { display: grid; height: 100%; background: var(--white); align-content: start; }
+    .record-media { aspect-ratio: 16 / 8.5; overflow: hidden; background: var(--green); }
+    .record img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .35s cubic-bezier(.2,.7,.3,1); }
+    .record a:hover img { transform: scale(1.035); }
+    .record-text {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 10px 18px;
+      padding: 20px clamp(16px, 2vw, 27px) 24px;
+    }
+    .record-text h3 { margin: 0; font-size: clamp(1.65rem, 3vw, 2.6rem); line-height: 1.04; letter-spacing: -.061em; }
+    .record-text .type { margin: 8px 0 0; font-size: .875rem; color: var(--muted); font-weight: 650; }
+    .record-text .role { grid-column: 1; margin: 0; color: var(--pine); }
+    .record-text .arrow { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1; transition: transform .2s ease; }
+    .record a:hover .arrow { transform: translate(3px, -3px); }
+    .state-diagram {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(10px, 2.8vw, 38px);
+      isolation: isolate;
+      background: var(--green);
+      color: var(--white);
+    }
+    .state-diagram::before, .state-diagram::after {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      width: 60%;
+      aspect-ratio: 1;
+      border: 1px solid #f5f1e335;
+      border-radius: 50%;
+    }
+    .state-diagram::after { width: 78%; }
+    .state-diagram span { font: italic clamp(2.3rem, 5.15vw, 5rem)/1 var(--serif); }
+    .state-diagram span:last-child { color: var(--lime); }
+    .state-diagram b { display: grid; gap: 3px; justify-items: center; font-size: .85rem; font-weight: 650; }
+    .state-diagram b span { font: 1.65rem/1 var(--sans); }
+
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      margin-bottom: clamp(25px, 5vw, 64px);
+      background: var(--lime);
+    }
+    .contact::before, .contact::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      left: calc(50% - 13px);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--paper);
+      pointer-events: none;
+    }
+    .contact::before { top: -13px; }
+    .contact::after { bottom: -13px; }
+    .contact-title, .contact-links { padding: clamp(24px, 4.2vw, 56px); }
+    .contact-title p { margin: 17px 0 0; }
+    .contact-links { display: flex; flex-wrap: wrap; align-content: center; gap: 4px 24px; border-left: 4px dotted var(--paper); }
+    .contact-links a { display: inline-flex; min-height: 44px; align-items: center; gap: 5px; font-weight: 720; }
+
+    @media (max-width: 870px) {
+      .instrument { grid-template-columns: 1fr; }
+      .intro { flex-direction: row; align-items: end; gap: 24px; }
+      .intro::before, .intro::after { inset: auto auto -11px -11px; }
+      .intro::after { left: auto; right: -11px; }
+      .intro p { max-width: 32ch; margin-top: 20px; }
+      .target { width: clamp(66px, 14vw, 128px); }
+      .primary-link { white-space: nowrap; }
+    }
+    @media (max-width: 565px) {
+      .masthead { min-height: 63px; }
+      .masthead nav a { font-size: .875rem; }
+      .intro { flex-direction: column; align-items: start; gap: 20px; }
+      .intro h1 { font-size: clamp(2.65rem, 11.6vw, 3.7rem); }
+      .intro h1 span { display: inline; }
+      .intro p { margin-top: 13px; }
+      .primary-link { min-height: 44px; }
+      .exhibit { padding-inline: 12px; }
+      .timing-head label { font-size: 1rem; }
+      .timing-head output { gap: .44em; font-size: .875rem; }
+      .archive { grid-template-columns: 1fr; }
+      .state-diagram span { font-size: clamp(2.35rem, 9.6vw, 3.6rem); }
+      .contact { grid-template-columns: 1fr; }
+      .contact-links { border-left: 0; border-top: 4px dotted var(--paper); padding-block: 14px; }
+      .contact::before, .contact::after { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+      .frame[data-phase="hit"] .target::after { display: none; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">본문으로 바로가기</a>
+  <header class="shell masthead">
+    <a class="name" href="#top">윤평화</a>
+    <nav aria-label="주 메뉴">
+      <a href="#parry">받아치기</a>
+      <a href="#works">프로젝트</a>
+      <a href="#contact">연락처</a>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="parry" class="shell instrument" aria-labelledby="page-title">
+      <div class="intro">
+        <div>
+          <h1 id="page-title"><span>전투의</span> <span>한 프레임</span></h1>
+          <p>Unity 게임 클라이언트 개발자 윤평화입니다. 전투 시스템과 적 AI를 구현합니다.</p>
+        </div>
+        <a class="primary-link" href="#works">프로젝트 보기 <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="exhibit">
+        <figure>
+          <div class="frame" id="combat-view" data-phase="early">
+            <img src="assets/s_parry.jpg" alt="설원에서 보스 현무의 공격을 마주한 철과 묵의 플레이어" fetchpriority="high">
+            <div class="target" aria-hidden="true">
+              <span class="target-ring"></span><span class="probe-ring"></span><span class="center-mark"></span>
+            </div>
+          </div>
+          <figcaption class="caption">
+            <span>철과 묵 · 팀 제작 보스전</span>
+            <a href="assets/boss.mp4#t=8.6" target="_blank" rel="noopener">전투 영상 <span aria-hidden="true">↗</span></a>
+          </figcaption>
+        </figure>
+        <p id="timing-note" class="timing-note">판정 재현 · 공격 시점 앞뒤 0.10초가 성공 구간입니다.</p>
+        <div id="timing-controls" class="timing-controls" hidden>
+          <div class="timing-head">
+            <label for="timing">패링 타이밍</label>
+            <output for="timing" id="verdict" aria-live="off"><span class="time-value">−0.22초</span><span class="phase-label">이른 입력</span></output>
+          </div>
+          <div class="meter">
+            <div class="meter-rail" aria-hidden="true"></div>
+            <input id="timing" type="range" min="-300" max="300" step="10" value="-220" aria-describedby="timing-note">
+          </div>
+          <div class="scale">
+            <span aria-hidden="true">−0.30초</span>
+            <button class="center-button" type="button" id="center">판정 시점</button>
+            <span aria-hidden="true">+0.30초</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell works" id="works" aria-labelledby="works-title">
+      <h2 id="works-title">프로젝트</h2>
+      <div class="archive">
+        <article class="record">
+          <a href="index.html#cheolmuk/overview" aria-labelledby="cheolmuk-title">
+            <div class="record-media"><img src="assets/cm_title.jpg" alt="설원의 한양과 증기통을 멘 무사" loading="lazy"></div>
+            <div class="record-text">
+              <div><h3 id="cheolmuk-title">철과 묵</h3><p class="type">조선 스팀펑크 액션 · 팀</p></div>
+              <p class="role">화승총과 조준 연출, 받아치기, 적 AI를 구현했습니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+        <article class="record">
+          <a href="index.html#grimoire/overview" aria-labelledby="grimoire-title">
+            <div class="record-media state-diagram" role="img" aria-label="보스 상태 전이. 궁극기 3타를 모두 받아치면 그로기로 전환됩니다.">
+              <span aria-hidden="true">Ultimate</span><b aria-hidden="true">3타 패링<span>→</span></b><span aria-hidden="true">Groggy</span>
+            </div>
+            <div class="record-text">
+              <div><h3 id="grimoire-title">Grimoire</h3><p class="type">3D 사이드뷰 보스 액션 · 팀</p></div>
+              <p class="role">보스 AI와 공격 패턴, 패링, 팀에서 쓰는 공용 모듈을 만들었습니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+        <article class="record">
+          <a href="index.html#smartcity/overview" aria-labelledby="smartcity-title">
+            <div class="record-media"><img src="assets/vr_card.jpg" alt="승강장에 열차가 정차한 SmartCity VR" loading="lazy"></div>
+            <div class="record-text">
+              <div><h3 id="smartcity-title">SmartCity VR</h3><p class="type">VR 지하철역 멀티플레이 · 팀</p></div>
+              <p class="role">열차 운행, 문 상태 동기화, NPC 군중, VR 아바타를 구현했습니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+        <article class="record">
+          <a href="index.html#nyankov/overview" aria-labelledby="nyankov-title">
+            <div class="record-media"><img src="assets/nk_drag.jpg" alt="게임 화면 왼쪽에 열린 NyanKov의 인벤토리" loading="lazy"></div>
+            <div class="record-text">
+              <div><h3 id="nyankov-title">NyanKov</h3><p class="type">3D 익스트랙션 슈팅 · 팀</p></div>
+              <p class="role">인벤토리 모델부터 아이템 이동과 제작까지 담당했습니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+        <article class="record">
+          <a href="index.html#palegarden/overview" aria-labelledby="palegarden-title">
+            <div class="record-media"><img src="assets/pg_swarm.jpg" alt="풀밭에서 몬스터 무리를 상대하는 Pale Garden의 플레이어" loading="lazy"></div>
+            <div class="record-text">
+              <div><h3 id="palegarden-title">Pale Garden</h3><p class="type">2D 생존 액션 · 1인 개발</p></div>
+              <p class="role">기획부터 빌드까지 맡아 다수의 적과 투사체가 등장하는 전투를 만들었습니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+        <article class="record">
+          <a href="index.html#vkeyboard/overview" aria-labelledby="keyboard-title">
+            <div class="record-media"><img src="data/virtualKeyboard_image.jpg" alt="종이에 인쇄한 키 위에 놓인 손가락을 추적하는 웹캠 화면" loading="lazy"></div>
+            <div class="record-text">
+              <div><h3 id="keyboard-title">웹 기반 가상 키보드</h3><p class="type">웹캠 입력 · 팀</p></div>
+              <p class="role">손가락의 위치를 추적해 웹캠으로 키 입력을 인식합니다.</p><span class="arrow" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell contact" id="contact" aria-labelledby="contact-title">
+    <div class="contact-title">
+      <h2 id="contact-title">연락처</h2>
+      <p>윤평화 · 게임 클라이언트 개발자</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:yph2003go@naver.com">이메일 <span aria-hidden="true">↗</span></a>
+      <a href="https://github.com/peace03">GitHub <span aria-hidden="true">↗</span></a>
+      <a href="https://sedatus.tistory.com">개발 블로그 <span aria-hidden="true">↗</span></a>
+    </div>
+  </footer>
+
+  <script>
+    const timing = document.querySelector("#timing");
+    const view = document.querySelector("#combat-view");
+    const verdict = document.querySelector("#verdict");
+    const timeValue = verdict.querySelector(".time-value");
+    const phaseLabel = verdict.querySelector(".phase-label");
+    const labels = { early: "이른 입력", hit: "받아치기 성공", late: "늦은 입력" };
+
+    function showTiming() {
+      const offset = timing.valueAsNumber;
+      const phase = Math.abs(offset) <= 100 ? "hit" : offset < 0 ? "early" : "late";
+      const ringScale = offset <= 0 ? 1 - offset / 270 : 1 - offset / 540;
+      const sign = offset < 0 ? "−" : offset > 0 ? "+" : "";
+      const time = sign + (Math.abs(offset) / 1000).toFixed(2) + "초";
+
+      view.dataset.phase = phase;
+      view.style.setProperty("--ring-scale", ringScale.toFixed(3));
+      verdict.dataset.phase = phase;
+      timeValue.textContent = time;
+      phaseLabel.textContent = labels[phase];
+      timing.setAttribute("aria-valuetext", time + ", " + labels[phase]);
+    }
+
+    timing.addEventListener("input", showTiming);
+    document.querySelector("#center").addEventListener("click", () => {
+      timing.value = "0";
+      showTiming();
+      timing.focus({ preventScroll: true });
+    });
+
+    showTiming();
+    document.querySelector("#timing-controls").hidden = false;
+  </script>
+</body>
+</html>
